@@ -35,6 +35,7 @@ for i in range(6):
     f_default[i, :] = get_fi(a[i], m[i])
 
 # INPUT: pose = [x, y, z, roll, pitch, yaw], feetPose = 6*3 matrix specifying the Pose of six toes in W
+# OUTPUT: thetas (6,3), status (6,2); rows are Legs
 def body_ik(pose, feetPose=f_default):
     R = rot(pose[3], pose[4], pose[5])
     t = np.array([pose[0], pose[1], pose[2]])
