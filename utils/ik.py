@@ -11,7 +11,12 @@ L3 = 132
 MAX_SPEED = 40
 
 # input: target point in mm
-# output: theta1 - 3 in degrees
+# output: theta1 - 3 in degrees, if not solvable or out of bounds, return error code
+# Error code: 
+# 0 - not solvable
+# 1 - theta 1 out of bound
+# 2 - theta 2 out of bound
+# 3 - theta 3 out of bound
 def ik(x,y,z):
     theta1 = np.rad2deg(np.atan2(y, x)) 
     r = np.sqrt(x**2 + y**2)
@@ -28,21 +33,21 @@ def ik(x,y,z):
 
     # if abs of theta1 out of bound, return no sol
     if not (theta1 <= 45 + 1e-9 and theta1 >= -45 - 1e-9):
-        return None
+        return 1
 
     u = r - L1
     D = np.sqrt(u**2 + z**2)
 
     # before calculating for theta3, we check if the calculated D will guarentee a solution
     if D > L2 + L3 or D < L3 - L2:
-        return None
+        return 0
     
     # use law of cosine to get theta3; we only want the positive solution here
     theta3 = np.rad2deg(np.arccos((D**2 - L2**2 - L3**2)/(2 * L2 * L3)))
 
     # check if theta3 is within [15, 165]; if not, return no solution
     if not (theta3 >= 15 - 1e-8 and theta3 <= 165 + 1e-8):
-        return None
+        return 3
 
     # calculate for theta2
     alpha = np.atan2(z, u)
@@ -57,7 +62,7 @@ def ik(x,y,z):
     
     # check if theta2 is within [-75, 75]
     if not (theta2 >= -75 - 1e-9 and theta2 <= 75 + 1e-9):
-        return None
+        return 2
 
     return (theta1.item(), theta2.item(), theta3.item())
 

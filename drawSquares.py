@@ -1,5 +1,5 @@
 import numpy as np
-from IKTest import ik
+from ik import ik
 import time
 import constants
 import serial

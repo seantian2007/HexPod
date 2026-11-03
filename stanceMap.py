@@ -1,8 +1,8 @@
 import numpy as np
 import constants
 import matplotlib.pyplot as plt
-from IKTest import ik
-from Jacobian import jacobian
+from ik import ik
+from utils.Jacobian import jacobian
 
 # take theta1 = 0, define u, z in the plane of the leg with step size of 2mm
 u = np.arange(-100, 210, 2)
