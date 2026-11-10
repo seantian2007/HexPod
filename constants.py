@@ -17,6 +17,11 @@ DEGREE_PER_PULSE: Final = 180/ 2000
 
 # kinetics const
 MAX_LINEAR_SPEED = 40 # mm/s
+
+# list of zero pulse in this order: R1, R2, R3, L1, L2, L3; inside each Leg: coxa, femur, tibia
+#ZERO_PULSE: Final = [1480, 1540, 1550, 1520, 1490, 1520, 1410, 1470, 1530, 1450, 1580, 1510, 1490, 1470, 1470, 1540, 1480, 1500]
+ZERO_PULSE: Final = [1480, 1580, 1550, 1520, 1490, 1520, 1410, 1480, 1530, 1450, 1580, 1510, 1490, 1470, 1470, 1540, 1500, 1500]
+
 # Leg-specific const
 class Legs:
     # constant universal to every leg
