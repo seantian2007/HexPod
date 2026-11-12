@@ -28,6 +28,7 @@ def rot(roll, pitch, yaw):
 
     return Rz @ Ry @ Rx
 
+
 def Rz(angle):
     angle_rad = np.radians(angle)
     return np.array([

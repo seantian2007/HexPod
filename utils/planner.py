@@ -35,7 +35,7 @@ def make_plan(pose_fn, duration, rate=50):
             thetas_i_flatten = thetas_i.flatten()
             if i != 0:
                 theta_rate = (thetas_i_flatten - thetas[i-1, :]) / (1/rate)
-                if False in abs(theta_rate) <= 100:
+                if np.any(np.abs(theta_rate) > 100):
                     raise ValueError(f"frame {i}, t={times[i]:.2f}s, theta rate too large")
                 else:
                     thetas[i, :] = thetas_i_flatten
@@ -44,9 +44,33 @@ def make_plan(pose_fn, duration, rate=50):
 
     return times, poses, thetas
 
-times, poses, thetas = make_plan(wave_dance, 10)
-print(times)
-print(poses)
-print(thetas)
+def make_plan_feet(feet_fn, duration, rate=50):
+    times = np.arange(duration * rate) / rate
+    thetas = np.zeros((len(times), 18))
+    for i in range(len(times)):
+        thetas_i, status_i = body_ik(np.zeros(6), feet_fn(times[i]))
+        if False in status_i[:, 0]:
+            index_err = [l for l, val in enumerate(status_i[:, 0]) if not val]
+            raise ValueError(f"frame {i}, t={times[i]:.2f}s, leg_num {index_err}, code {status_i[index_err[0], 1].item()}")
+        else:
+            thetas_i_flatten = thetas_i.flatten()
+            if i != 0:
+                theta_rate = (thetas_i_flatten - thetas[i-1, :]) / (1/rate)
+                if np.any(np.abs(theta_rate) > 100):
+                    raise ValueError(f"frame {i}, t={times[i]:.2f}s, theta rate too large")
+                else:
+                    thetas[i, :] = thetas_i_flatten
+            else:
+                thetas[i, :] = thetas_i_flatten
+
+    return times, thetas
+
+
+
+if __name__ == "__main__":
+    times, poses, thetas = make_plan(wave_dance, 10)
+    print(times)
+    print(poses)
+    print(thetas)
 
 

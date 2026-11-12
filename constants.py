@@ -1,4 +1,5 @@
 from typing import Final
+import numpy as np
 
 # unit converstion constnat
 KGcm_PER_Nmm: Final = 0.01019716 # times this constant by Nmm will get KGcm
@@ -21,6 +22,16 @@ MAX_LINEAR_SPEED = 40 # mm/s
 # list of zero pulse in this order: R1, R2, R3, L1, L2, L3; inside each Leg: coxa, femur, tibia
 #ZERO_PULSE: Final = [1480, 1540, 1550, 1520, 1490, 1520, 1410, 1470, 1530, 1450, 1580, 1510, 1490, 1470, 1470, 1540, 1480, 1500]
 ZERO_PULSE: Final = [1480, 1580, 1550, 1520, 1490, 1520, 1410, 1480, 1530, 1450, 1580, 1510, 1490, 1470, 1470, 1540, 1500, 1500]
+
+# default toe position in world coords
+F_DEFAULT: Final = np.array([
+    [ 2.25480566e+02, -1.30191022e+02, -8.95022091e+01],
+    [ 9.91853962e-15, -2.60382045e+02, -8.95022091e+01],
+    [-2.25480566e+02, -1.30191022e+02, -8.95022091e+01],
+    [ 2.25480566e+02,  1.30191022e+02, -8.95022091e+01],
+    [ 9.91853962e-15,  2.60382045e+02, -8.95022091e+01],
+    [-2.25480566e+02,  1.30191022e+02, -8.95022091e+01],
+])
 
 # Leg-specific const
 class Legs:
