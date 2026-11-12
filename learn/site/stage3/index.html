@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stage 3 · Inverse Kinematics — HexPod Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: sticky top bar (brand · stage · language) → hero with live hexapod → single 720px reading column; widgets break out to 900px */
+:root{
+  --bg:#f4f6f8; --paper:#ffffff; --ink:#16202a; --muted:#5b6875; --line:#d8dfe6; --grid:#e4e9ee;
+  --accent:#d9771f; --accent-soft:#fcebdc; --blue:#2a6fb0; --blue-soft:#e2edf8;
+  --good:#2b8a57; --bad:#c0463a; --body:#e9edf1;
+  --f-display:"Space Grotesk","Noto Sans SC",system-ui,sans-serif;
+  --f-body:"Inter","Noto Sans SC",system-ui,-apple-system,"PingFang SC",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10161c; --paper:#17202a; --ink:#e3e9ef; --muted:#98a5b2; --line:#2b3743; --grid:#222d38;
+  --accent:#f0954a; --accent-soft:#3a2716; --blue:#6ba8e2; --blue-soft:#192b3d;
+  --good:#5cc08b; --bad:#e67b6a; --body:#26323e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10161c; --paper:#17202a; --ink:#e3e9ef; --muted:#98a5b2; --line:#2b3743; --grid:#222d38;
+  --accent:#f0954a; --accent-soft:#3a2716; --blue:#6ba8e2; --blue-soft:#192b3d;
+  --good:#5cc08b; --bad:#e67b6a; --body:#26323e; color-scheme:dark}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7}
+a{color:var(--blue)}
+code,.mono{font-family:var(--f-mono);font-size:.88em}
+.gutter{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+/* top bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:var(--bg)}
+.bar .in{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:14px;height:56px}
+.brand{font-family:var(--f-display);font-weight:700;letter-spacing:-.01em;white-space:nowrap}
+.brand span{color:var(--accent)}
+.crumb{color:var(--muted);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
+.lang{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+.lang select{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:5px 8px;cursor:pointer}
+.lang select:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+@media (max-width:520px){.crumb{display:none}.lang .lbl{display:none}}
+/* stage strip */
+.strip{display:flex;gap:6px;flex-wrap:wrap;margin:22px 0 0}
+.strip a,.strip span{font-family:var(--f-mono);font-size:12px;padding:3px 9px;border-radius:99px;border:1px solid var(--line);color:var(--muted);text-decoration:none}
+.strip .done{color:var(--good);border-color:color-mix(in srgb,var(--good) 40%,transparent)}
+.strip .now{background:var(--accent);color:#fff;border-color:var(--accent)}
+/* hero */
+.hero{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.1fr;gap:28px;align-items:center;padding-block:10px 30px}
+@media (max-width:820px){.hero{grid-template-columns:1fr}}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+h1{font-family:var(--f-display);font-size:clamp(34px,6vw,56px);line-height:1.05;letter-spacing:-.02em;margin:.25em 0 .35em;text-wrap:balance}
+.sub{font-size:18px;color:var(--muted);max-width:34em}
+.mission{margin-top:18px;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:start}
+.mission b{font-family:var(--f-display)}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13.5px;color:var(--muted);margin-top:12px}
+.stage-canvas{position:relative;min-width:0}
+.stage-canvas canvas{width:100%;aspect-ratio:4/3;display:block;border-radius:12px;background:var(--paper);border:1px solid var(--line);cursor:grab;touch-action:none}
+.cap{font-size:13px;color:var(--muted);margin:8px 2px 0}
+/* article */
+main{max-width:740px;margin:0 auto}
+section{padding-block:18px}
+h2{font-family:var(--f-display);font-size:28px;line-height:1.2;margin:1.6em 0 .4em;letter-spacing:-.01em;text-wrap:balance}
+h2 .step{display:block;font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;margin-bottom:6px}
+h3{font-family:var(--f-display);font-size:19px;margin:1.2em 0 .3em}
+p{margin:.7em 0}
+.wide{max-width:920px;margin:18px auto;padding:0}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:640px){.two{grid-template-columns:1fr}}
+.two .card{min-width:0}
+.analogy b{font-family:var(--f-display)}
+.eq{font-family:var(--f-mono);background:var(--blue-soft);border-radius:8px;padding:10px 14px;overflow-x:auto;white-space:nowrap;margin:10px 0}
+.worked{border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0;padding:10px 14px;margin:12px 0;font-size:15px}
+.worked .t{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:2px}
+.predict{background:var(--paper);border:1px dashed var(--accent);border-radius:12px;padding:16px}
+.predict button,.toggle{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:6px 12px;border-radius:8px;cursor:pointer}
+.toggle[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent)}
+/* widget */
+.widget{display:grid;grid-template-columns:1.35fr 1fr;gap:0;overflow:hidden;padding:0}
+@media (max-width:720px){.widget{grid-template-columns:1fr}}
+.widget canvas{width:100%;aspect-ratio:4/3;display:block;background:var(--paper);touch-action:none;cursor:crosshair}
+.readout{padding:14px 16px;border-left:1px solid var(--line);font-size:14px;min-width:0;display:flex;flex-direction:column;gap:8px}
+@media (max-width:720px){.readout{border-left:none;border-top:1px solid var(--line)}}
+.readout .hint{color:var(--muted);font-size:13px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-family:var(--f-mono);font-size:13px;font-variant-numeric:tabular-nums}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0}
+.pill{display:inline-block;padding:1px 9px;border-radius:99px;font-size:12px;font-family:var(--f-mono)}
+.ok{background:color-mix(in srgb,var(--good) 16%,transparent);color:var(--good)}
+.no{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+/* practice */
+.ladder{list-style:none;padding:0;margin:14px 0;display:grid;gap:8px}
+.ladder li{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.ladder .no-{font-family:var(--f-mono);font-weight:600;color:var(--accent)}
+.ladder li.reward{border-color:var(--accent);background:var(--accent-soft)}
+.cta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:16px 0}
+.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;padding:10px 18px;border-radius:10px}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+pre.cmd{font-family:var(--f-mono);font-size:13px;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;overflow-x:auto}
+.log{display:grid;gap:10px}
+.log .card{display:grid;grid-template-columns:auto 1fr;gap:4px 12px}
+.log .tag{font-family:var(--f-mono);font-size:12px;color:var(--bad);white-space:nowrap}
+footer{max-width:740px;margin:40px auto 60px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:14px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="bar"><div class="in gutter">
+  <div class="brand">HexPod <span>Academy</span></div>
+  <div class="crumb" data-i18n="crumb"></div>
+  <label class="lang"><span class="lbl" data-i18n="langLabel"></span><select id="lang" aria-label="Language"></select></label>
+</div></div>
+
+<div class="gutter">
+<div style="max-width:1100px;margin:0 auto">
+  <nav class="strip" aria-label="stages">
+    <span class="done">0 ✓</span><span class="done">1 ✓</span><span class="done">2 ✓</span><span class="now">3 IK</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
+  </nav>
+</div>
+<header class="hero">
+  <div>
+    <div class="eyebrow" data-i18n="eyebrow"></div>
+    <h1 data-i18n="h1"></h1>
+    <p class="sub" data-i18n="sub"></p>
+    <div class="mission"><span style="font-size:22px">🎯</span><div data-i18n="mission"></div></div>
+    <div class="meta"><span data-i18n="metaTime"></span><span data-i18n="metaPre"></span><span data-i18n="metaTools"></span></div>
+  </div>
+  <div class="stage-canvas">
+    <canvas id="hero" width="880" height="660" aria-label="hexapod animation"></canvas>
+    <p class="cap" data-i18n="heroCap"></p>
+  </div>
+</header>
+
+<main>
+<section>
+  <h2><span class="step" data-i18n="s1step"></span><span data-i18n="s1h"></span></h2>
+  <p data-i18n="s1p1"></p>
+  <div class="two analogy">
+    <div class="card" data-i18n="fkCard"></div>
+    <div class="card" data-i18n="ikCard"></div>
+  </div>
+  <p data-i18n="s1p2"></p>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s2step"></span><span data-i18n="s2h"></span></h2>
+  <div class="predict">
+    <p style="margin-top:0" data-i18n="predictQ"></p>
+    <button id="reveal" type="button" data-i18n="predictBtn"></button>
+    <div id="answer" hidden><p data-i18n="predictA"></p></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s3step"></span><span data-i18n="s3h"></span></h2>
+  <p data-i18n="s3p1"></p>
+</section>
+</main>
+<div class="wide card widget">
+  <canvas id="top" width="720" height="540" aria-label="top view widget"></canvas>
+  <div class="readout">
+    <div class="hint" data-i18n="topHint"></div>
+    <dl class="kv" id="topKV"></dl>
+    <div id="topSt"></div>
+  </div>
+</div>
+<main>
+<section style="padding-top:0">
+  <p data-i18n="s3p2"></p>
+  <div class="eq">θ1 = atan2(y, x)</div>
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="s3w"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s4step"></span><span data-i18n="s4h"></span></h2>
+  <p data-i18n="s4p1"></p>
+  <div class="eq">r = √(x² + y²) &nbsp;&nbsp;→&nbsp;&nbsp; u = r − L1 = r − 62</div>
+  <p data-i18n="s4p2"></p>
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="s4w"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s5step"></span><span data-i18n="s5h"></span></h2>
+  <p data-i18n="s5p1"></p>
+</section>
+</main>
+<div class="wide card widget">
+  <canvas id="side" width="720" height="540" aria-label="side view widget"></canvas>
+  <div class="readout">
+    <div class="hint" data-i18n="sideHint"></div>
+    <dl class="kv" id="sideKV"></dl>
+    <div id="sideSt"></div>
+    <div><button class="toggle" id="flip" type="button" aria-pressed="false" data-i18n="flipBtn"></button></div>
+  </div>
+</div>
+<main>
+<section style="padding-top:0">
+  <p data-i18n="s5p2"></p>
+  <div class="eq">cos θ3 = (D² − L2² − L3²) / (2·L2·L3)</div>
+  <p data-i18n="s5p3"></p>
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="s5w"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s6step"></span><span data-i18n="s6h"></span></h2>
+  <p data-i18n="s6p1"></p>
+  <div class="eq">θ2 = α + β &nbsp;=&nbsp; atan2(z, u) + atan2(L3·sin θ3, L2 + L3·cos θ3)</div>
+  <p data-i18n="s6p2"></p>
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="s6w"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s7step"></span><span data-i18n="s7h"></span></h2>
+  <p data-i18n="s7p1"></p>
+  <p data-i18n="s7p2"></p>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s8step"></span><span data-i18n="s8h"></span></h2>
+  <p data-i18n="s8p1"></p>
+  <ol class="ladder">
+    <li><span class="no-">1</span><span data-i18n="cp1"></span></li>
+    <li><span class="no-">2</span><span data-i18n="cp2"></span></li>
+    <li><span class="no-">3</span><span data-i18n="cp3"></span></li>
+    <li><span class="no-">4</span><span data-i18n="cp4"></span></li>
+    <li><span class="no-">5</span><span data-i18n="cp5"></span></li>
+    <li class="reward"><span class="no-">★</span><span data-i18n="cpR1"></span></li>
+    <li class="reward"><span class="no-">★★</span><span data-i18n="cpR2"></span></li>
+    <li class="reward"><span class="no-">🤖</span><span data-i18n="cpR3"></span></li>
+  </ol>
+  <div class="cta">
+    <a class="btn" id="nbLink" href="notebook/index.html" data-i18n="openNb"></a>
+    <span class="mono" style="color:var(--muted);font-size:13px" data-i18n="orLocal"></span>
+  </div>
+  <pre class="cmd">pip install marimo numpy
+marimo edit learn/notebooks/stage3_ik.py</pre>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s9step"></span><span data-i18n="s9h"></span></h2>
+  <p data-i18n="s9p1"></p>
+  <div class="log">
+    <div class="card"><span class="tag" data-i18n="bug1t"></span><span data-i18n="bug1"></span></div>
+    <div class="card"><span class="tag" data-i18n="bug2t"></span><span data-i18n="bug2"></span></div>
+    <div class="card"><span class="tag" data-i18n="bug3t"></span><span data-i18n="bug3"></span></div>
+  </div>
+</section>
+</main>
+<footer>
+  <span data-i18n="prev"></span>
+  <span data-i18n="next"></span>
+</footer>
+</div>
+<script src="../hexview.js"></script>
+<script src="i18n.js"></script>
+<script src="page.js"></script>
+</body>
+</html>
