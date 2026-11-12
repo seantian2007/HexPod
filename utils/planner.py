@@ -74,11 +74,30 @@ def make_plan_feet(feet_fn, duration, rate=50):
 
     return times, thetas
 
+LEG_NAMES = ['R1', 'R2', 'R3', 'L1', 'L2', 'L3']
+JOINT_NAMES = ['coxa', 'femur', 'tibia']
+
+
+# joint speed check vs. previous frame; returns a reason string, or "" if OK
+def check_rate(thetas, prev, rate=50, limit=100):
+    if prev is None:
+        return ""
+    d = np.abs(thetas - prev) * rate
+    if np.any(d > limit):
+        j = int(np.argmax(d))
+        return f"{LEG_NAMES[j // 3]} {JOINT_NAMES[j % 3]} {d[j]:.0f} deg/s > {limit}"
+    return ""
+
+
 ## INPUTS
 # feet: (6, 3) matrix of feet pos in robot frame
 # prev: (18, ) 18 angles in the last frame
-def solve_frame(feet, prev, rate=50):
-    thetas, status = body_ik(np.zeros(6), feet)
+# limit: joint speed limit, deg/s
+# pose: body pose (x, y, z, roll, pitch, yaw), None = zeros
+def solve_frame(feet, prev, rate=50, limit=100, pose=None):
+    if pose is None:
+        pose = np.zeros(6)
+    thetas, status = body_ik(pose, feet)
     thetas = thetas.flatten()
     reason = ""
     if False in status[:, 0]:
@@ -86,10 +105,9 @@ def solve_frame(feet, prev, rate=50):
         reason = f"leg_num {index_err}, code {status[index_err[0], 1].item()}"
         return (None, reason)
     else:
-        if prev is not None:
-            if np.any(np.abs((thetas - prev) * rate) > 100):
-                reason = "theta rate too larger"
-                return (None, reason)
+        reason = check_rate(thetas, prev, rate, limit)
+        if reason:
+            return (None, reason)
 
     return (thetas, reason)
 

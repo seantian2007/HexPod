@@ -1,18 +1,16 @@
 """
-SIM 可视化工具（teleop 专用）
+SIM visualization for teleop.
+  1. LiveView     - live pygame top view while teleop runs
+  2. KeyboardPad  - keyboard stand-in (defined in utils/gamepad.py, imported here)
+  3. replay(path) - plot a saved teleop_log.npz: overview + 3D replay
 
-这个文件里有三样东西：
-  1. LiveView     —— teleop 运行时实时画的 pygame 窗口（俯视、世界坐标、镜头跟随机器人）
-  2. KeyboardPad  —— 手柄读不到时用键盘代替（接口和 GamePad 一样：read(dt) / quit_pressed()）
-  3. replay(path) —— 跑完以后读 teleop_log.npz，用 matplotlib 画总览图 + 3D 回放动画
-
-用法：
+Usage:
   view = LiveView(rate=50)
-  每一帧：view.update(feet, walker.was_stance, cmd, thetas, prev)
-  退出：  view.closed 为 True（关窗口或按 Esc）
+  each frame: view.update(feet, walker.was_stance, cmd, thetas, prev)
+  stop when view.closed is True (window closed or Esc)
 
-  python3 -m utils.sim_view                  # 回放默认的 teleop_log.npz
-  python3 -m utils.sim_view my_log.npz       # 回放指定文件
+  python3 -m utils.sim_view                  # replay teleop_log.npz
+  python3 -m utils.sim_view my_log.npz       # replay another file
 """
 import sys
 import numpy as np
@@ -20,26 +18,25 @@ import numpy as np
 from .body_ik import a as ALPHA, m as MOUNT
 
 LEG_NAMES = ['R1', 'R2', 'R3', 'L1', 'L2', 'L3']
-# RGB, 0-255。右腿暖色、左腿冷色，一眼能分左右
+# RGB, 0-255. Right legs warm, left legs cool
 LEG_RGB = [(230, 85, 70), (240, 150, 50), (205, 170, 40),
            (60, 130, 220), (60, 175, 170), (130, 100, 210)]
-HEX_ORDER = [0, 1, 2, 5, 4, 3]          # 绕机身一圈：R1 R2 R3 L3 L2 L1
+HEX_ORDER = [0, 1, 2, 5, 4, 3]          # around the body: R1 R2 R3 L3 L2 L1
 
 
 # ---------------------------------------------------------------------------
-# 共用的小函数（LiveView 和 replay 都用）
+# Shared helpers (LiveView and replay)
 # ---------------------------------------------------------------------------
 def body_to_world(p_xy, X, Y, psi):
-    """机身系 xy → 世界系 xy。p_xy: (..., 2)。psi 是航向角（rad，CCW 为正）。"""
+    """Body xy -> world xy. p_xy: (..., 2). psi: heading (rad, CCW +)."""
     c, s = np.cos(psi), np.sin(psi)
     R = np.array([[c, -s], [s, c]])
     return p_xy @ R.T + np.array([X, Y])
 
 
 def integrate_pose(cmd, dt):
-    """把每帧的 (vx, vy, w) 积分成机身在世界里的位姿。
-    cmd: (N, 3)，vx/vy 是机身系 mm/s，w 是 °/s。返回 (N, 3)：X, Y (mm), psi (rad)。
-    这就是阶段 6 Q5 的运动学：v 在机身系，要先转到世界系再积分。"""
+    """Integrate per-frame (vx, vy, w) into world pose.
+    cmd: (N, 3), vx/vy in body frame mm/s, w in deg/s. Returns (N, 3): X, Y (mm), psi (rad)."""
     pose = np.zeros((len(cmd), 3))
     X = Y = psi = 0.0
     for k, (vx, vy, w) in enumerate(cmd):
@@ -52,7 +49,7 @@ def integrate_pose(cmd, dt):
 
 
 def support_polygon(pts):
-    """着地脚 (n, 2) 按逆时针排好。少于 3 只脚返回 None。"""
+    """Stance feet (n, 2) sorted CCW. None if fewer than 3."""
     if len(pts) < 3:
         return None
     c = pts.mean(axis=0)
@@ -60,7 +57,7 @@ def support_polygon(pts):
 
 
 def stability_margin(pts):
-    """重心投影（机身原点）到支撑多边形最近边的有符号距离，>0 在里面。pts 是机身系。"""
+    """Signed distance from body origin to the nearest support polygon edge, > 0 inside. pts in body frame."""
     P = support_polygon(pts)
     if P is None:
         return np.nan
@@ -74,17 +71,11 @@ def stability_margin(pts):
 
 
 # ---------------------------------------------------------------------------
-# 1. LiveView：运行时的实时俯视图
+# 1. LiveView: live top view
 # ---------------------------------------------------------------------------
 class LiveView:
-    """pygame 窗口。画面（从下往上一层层画）：
-       网格（世界固定，机器人走时网格往后退，就能看出在动）
-       → 机身走过的路径 → 历史脚印（越旧越淡）
-       → 支撑多边形（绿=稳，红=重心出界）+ 稳定裕度
-       → 机身六边形 + 六条腿（实心=着地，空心=摆动，圈越大抬得越高）
-       → 速度箭头 + 转向中心 ICR
-       → 左上角仪表（命令、关节速度、裕度）+ 底部滚动步态图
-    """
+    """pygame window. Draw order: world grid -> body path -> footprints -> support polygon + margin
+       -> body + legs (filled = stance, ring = swing) -> velocity arrow + ICR -> HUD + gait chart."""
 
     def __init__(self, rate=50, v_max=40, w_max=15, size=(1000, 720),
                  px_per_mm=0.7, draw_every=2, speed_limit=100):
@@ -102,25 +93,27 @@ class LiveView:
         self.draw_every = draw_every
         self.closed = False
 
-        self.k = 0                                  # 帧号
-        self.X = self.Y = self.psi = 0.0            # 机身在世界里的位姿
-        self.path = []                              # 机身走过的点
-        self.prints = []                            # (x, y, 腿号, 落地帧号)
+        self.k = 0                                  # frame number
+        self.X = self.Y = self.psi = 0.0            # body pose in world
+        self.path = []                              # body path
+        self.prints = []                            # (x, y, leg, landing frame)
         self.prev_stance = np.ones(6, dtype=bool)
         self.z0 = None
-        self.gait_hist = np.ones((int(4 * rate), 6), dtype=bool)   # 最近 4 秒的着地情况
-        self.peak = 0.0                             # 整个过程的最大关节速度
+        self.gait_hist = np.ones((int(4 * rate), 6), dtype=bool)   # stance history, last 4 s
+        self.peak = 0.0                             # peak joint speed so far
 
-    # 世界坐标 (mm) → 屏幕像素。镜头中心跟着机身，世界 x 朝右、y 朝上
+    # world (mm) -> screen px; camera follows the body
     def _px(self, xy):
         xy = np.atleast_2d(xy)
         sx = self.W / 2 + (xy[:, 0] - self.X) * self.s
         sy = self.H / 2 + 40 - (xy[:, 1] - self.Y) * self.s
         return np.stack([sx, sy], axis=1)
 
-    def update(self, feet, stance, cmd, thetas=None, prev=None):
-        """每帧调用一次。feet: (6,3) 机身系；stance: (6,) bool；cmd: (vx, vy, w)；
-        thetas/prev: (18,) 本帧和上一帧的角度（只用来显示关节速度，可以不传）。"""
+    def update(self, feet, stance, cmd, thetas=None, prev=None, status=None):
+        """Call once per frame. feet: (6,3) body frame; stance: (6,) bool; cmd: (vx, vy, w);
+        thetas/prev: (18,) angles this/last frame (for joint speed, optional);
+        status: extra HUD lines (list of str)."""
+        self.status = status or []
         pg = self.pg
         for e in pg.event.get((pg.QUIT, pg.KEYDOWN)):
             if e.type == pg.QUIT or (e.type == pg.KEYDOWN and e.key == pg.K_ESCAPE):
@@ -131,7 +124,7 @@ class LiveView:
         if self.z0 is None:
             self.z0 = feet[:, 2].min()
 
-        # --- 状态更新（每帧都做，不管画不画）---
+        # --- state update ---
         c, s = np.cos(self.psi), np.sin(self.psi)
         self.X += (c * vx - s * vy) * self.dt
         self.Y += (s * vx + c * vy) * self.dt
@@ -141,7 +134,7 @@ class LiveView:
             self.path = self.path[-600:]
 
         feet_w = body_to_world(feet[:, :2], self.X, self.Y, self.psi)
-        for i in np.where(stance & ~self.prev_stance)[0]:       # 刚落地的脚留一个脚印
+        for i in np.where(stance & ~self.prev_stance)[0]:       # footprint for each foot that just landed
             self.prints.append((*feet_w[i], i, self.k))
         self.prints = self.prints[-90:]
         self.prev_stance = stance.copy()
@@ -165,7 +158,7 @@ class LiveView:
         vx, vy, w = cmd
         scr.fill((246, 247, 249))
 
-        # 网格：每 100 mm 一条细线，每 500 mm 一条粗线
+        # grid: thin line every 100 mm, thick every 500 mm
         half_w, half_h = self.W / 2 / self.s, self.H / 2 / self.s
         for g in np.arange(np.floor((self.X - half_w) / 100) * 100, self.X + half_w + 100, 100):
             x = self._px([g, 0])[0, 0]
@@ -174,11 +167,11 @@ class LiveView:
             y = self._px([0, g])[0, 1]
             pg.draw.line(scr, (214, 218, 224) if g % 500 == 0 else (232, 235, 239), (0, y), (self.W, y))
 
-        # 半透明的东西要先画在带 alpha 的 Surface 上再贴到屏幕。
-        # 注意 pygame 在 alpha 层上画图是“覆盖”不是“混合”，所以支撑多边形单独一层先贴，路径和脚印再贴在上面
+        # translucent layers: pygame overwrites alpha instead of blending,
+        # so the support polygon gets its own layer, blitted first
         layer = pg.Surface((self.W, self.H), pg.SRCALPHA)
 
-        # 支撑多边形
+        # support polygon
         P = support_polygon(feet_w[stance])
         if P is not None:
             ok = margin > 0
@@ -190,18 +183,18 @@ class LiveView:
         scr.blit(layer, (0, 0))
         layer.fill((0, 0, 0, 0))
 
-        # 机身路径
+        # body path
         if len(self.path) > 1:
             pg.draw.lines(layer, (70, 90, 130, 200), False, self._px(np.array(self.path + [(self.X, self.Y)])), 3)
 
-        # 历史脚印，越旧越淡
+        # footprints, older = fainter
         for x, y, i, k0 in self.prints:
             age = (self.k - k0) / (len(self.gait_hist) * 2)
             alpha = int(200 * max(0.15, 1 - age))
             p = self._px([x, y])[0]
             pg.draw.circle(layer, (*LEG_RGB[i], alpha), p, 5)
 
-        # ICR：转向中心。机身系里在 (−vy/ω, vx/ω)；太远就不画
+        # ICR at (-vy/w, vx/w) in body frame; skipped if too far
         w_rad = np.radians(w)
         icr = None
         if abs(w) > 0.3:
@@ -216,12 +209,12 @@ class LiveView:
         if icr is not None:
             scr.blit(self.font.render('ICR', True, (150, 90, 200)), icr + (9, -8))
 
-        # 机身六边形 + 腿
+        # body + legs
         mount_w = body_to_world(MOUNT, self.X, self.Y, self.psi)
         hexagon = self._px(mount_w[HEX_ORDER])
         pg.draw.polygon(scr, (58, 66, 84), hexagon)
         nose = self._px(body_to_world(np.array([[150, 0], [95, 30], [95, -30]]), self.X, self.Y, self.psi))
-        pg.draw.polygon(scr, (255, 200, 60), nose)                     # 黄三角 = 机头 (+x)
+        pg.draw.polygon(scr, (255, 200, 60), nose)                     # nose (+x)
         for i in range(6):
             m_px = self._px(mount_w[i])[0]
             f_px = self._px(feet_w[i])[0]
@@ -229,16 +222,16 @@ class LiveView:
             lift = max(0.0, feet[i, 2] - self.z0)
             if stance[i]:
                 pg.draw.circle(scr, LEG_RGB[i], f_px, 8)
-            else:                                                       # 摆动：空心圈，越高越大，带阴影
+            else:                                                       # swing: ring, bigger = higher
                 pg.draw.circle(scr, (200, 203, 208), f_px, 6)
                 pg.draw.circle(scr, LEG_RGB[i], f_px, int(8 + lift * 0.35), 3)
             scr.blit(self.font.render(LEG_NAMES[i], True, LEG_RGB[i]), f_px + (10, -20))
 
-        # 重心投影
+        # center of mass projection
         com = self._px([self.X, self.Y])[0]
         pg.draw.circle(scr, (220, 50, 50), com, 5)
 
-        # 速度箭头（世界系）
+        # velocity arrow (world frame)
         v_w = body_to_world(np.array([vx, vy]), 0, 0, self.psi)
         if np.hypot(*v_w) > 0.5:
             tip = com + np.array([v_w[0], -v_w[1]]) * 3.0
@@ -268,7 +261,8 @@ class LiveView:
 
     def _hud(self, cmd, rate_now, margin, stance):
         pg, scr = self.pg, self.screen
-        panel = pg.Surface((370, 182), pg.SRCALPHA)
+        lines = getattr(self, 'status', [])
+        panel = pg.Surface((370, 182 + 20 * len(lines)), pg.SRCALPHA)
         panel.fill((255, 255, 255, 225))
         scr.blit(panel, (12, 12))
         x, y = 24, 20
@@ -282,11 +276,13 @@ class LiveView:
         col = (40, 140, 80) if not np.isnan(margin) and margin > 30 else (210, 60, 60)
         scr.blit(self.font.render(f'margin {m_txt}   feet down {int(stance.sum())}', True, col), (x, y + 130))
         scr.blit(self.font.render(f'peak joint speed so far {self.peak:5.1f} deg/s', True, (90, 96, 110)), (x, y + 150))
+        for n, line in enumerate(lines):
+            scr.blit(self.font.render(line, True, (40, 44, 56)), (x, y + 174 + 20 * n))
         hint = self.font.render('B / Esc / close window = quit', True, (120, 126, 140))
         scr.blit(hint, (self.W - hint.get_width() - 14, 14))
 
     def _gait_strip(self):
-        """底部滚动步态图：每行一条腿，实心 = 着地。最右边是现在。"""
+        """Scrolling gait chart: one row per leg, filled = stance, newest on the right."""
         pg, scr = self.pg, self.screen
         n, rows = len(self.gait_hist), 6
         x0, h, W = 50, 11, self.W - 70
@@ -309,46 +305,16 @@ class LiveView:
         pg.draw.line(scr, (60, 66, 80), (x0 + W, y0 - 4), (x0 + W, y0 + rows * (h + 4)), 2)
 
 
-# ---------------------------------------------------------------------------
-# 2. KeyboardPad：没手柄时的替身（需要 LiveView 窗口在前台）
-# ---------------------------------------------------------------------------
-class KeyboardPad:
-    """W/S = 前后，A/D = 左右平移，Q/E = 左转/右转，Esc = 退出。
-    和 GamePad 一样做了组合上限和变化率限制，所以手感接近摇杆推满。"""
-
-    def __init__(self, v_max=40, w_max=15, accel=100):
-        import pygame
-        self.pg = pygame
-        pygame.init()
-        self.v_max, self.w_max, self.accel = v_max, w_max, accel
-        self.last = np.zeros(3)
-
-    def read(self, dt=0.02):
-        self.pg.event.pump()
-        k = self.pg.key.get_pressed()
-        raw = np.array([k[self.pg.K_w] - k[self.pg.K_s],
-                        k[self.pg.K_a] - k[self.pg.K_d],
-                        k[self.pg.K_q] - k[self.pg.K_e]], dtype=float)
-        cmd = raw * np.array([self.v_max, self.v_max, self.w_max])
-        lim = np.hypot(cmd[0], cmd[1]) / self.v_max + abs(cmd[2]) / self.w_max
-        if lim > 1:
-            cmd /= lim
-        step = self.accel * dt * np.array([1, 1, self.w_max / self.v_max])
-        self.last = self.last + np.clip(cmd - self.last, -step, step)
-        return tuple(self.last)
-
-    def quit_pressed(self):
-        return bool(self.pg.key.get_pressed()[self.pg.K_ESCAPE])
+# 2. KeyboardPad now lives in utils/gamepad.py; re-exported here
+from .gamepad import KeyboardPad  # noqa: E402,F401
 
 
 # ---------------------------------------------------------------------------
-# 3. replay：跑完以后看 log
+# 3. replay: plot a saved log
 # ---------------------------------------------------------------------------
 def replay(path='teleop_log.npz', animate=True, every=2):
-    """读 teleop.py 存的 log，画两张图：
-       图 1 总览：世界俯视轨迹 / 命令 / 关节速度 / 稳定裕度 / 步态图
-       图 2 3D 回放动画（世界系，镜头跟随）
-    every: 动画每隔几帧画一次（2 = 25 fps，跑得动）。"""
+    """Plot a teleop log: fig 1 overview (path, commands, joint speed, margin, gait chart),
+       fig 2 3D replay. every: draw every n-th frame."""
     import matplotlib.pyplot as plt
     from matplotlib.animation import FuncAnimation
     from matplotlib.patches import Polygon
@@ -376,7 +342,7 @@ def replay(path='teleop_log.npz', animate=True, every=2):
     print(f'  最大关节速度 {jrate.max():.1f} °/s,  最小稳定裕度 {np.nanmin(margin):.1f} mm,'
           f'  走了 {np.hypot(*pose[-1, :2]):.0f} mm,  转了 {np.degrees(pose[-1, 2]):.0f}°')
 
-    # ---------------- 图 1：总览 ----------------
+    # ---- fig 1: overview ----
     fig = plt.figure(figsize=(14, 8.5))
     gs = fig.add_gridspec(4, 2, width_ratios=[1.1, 1], height_ratios=[1, 1, 1, 0.8], hspace=0.55, wspace=0.22)
     fig.suptitle(f'teleop log  ·  {L["gait"]}  T={float(L["T"])} s  h={float(L["H"])} mm  ·  '
@@ -384,11 +350,11 @@ def replay(path='teleop_log.npz', animate=True, every=2):
 
     ax = fig.add_subplot(gs[:, 0])
     for i in range(6):
-        down = stance[:, i] & ~np.r_[True, stance[:-1, i]]            # 落地那一帧
+        down = stance[:, i] & ~np.r_[True, stance[:-1, i]]            # landing frames
         ax.plot(feet_w[down, i, 0], feet_w[down, i, 1], 'o', ms=4, color=colors[i], alpha=0.6, label=LEG_NAMES[i])
     sc = ax.scatter(pose[:, 0], pose[:, 1], c=t, cmap='viridis', s=3, zorder=3)
     fig.colorbar(sc, ax=ax, fraction=0.04, pad=0.02, label='t (s)')
-    for k in np.linspace(0, N - 1, 6).astype(int):                     # 几个时刻的机身轮廓
+    for k in np.linspace(0, N - 1, 6).astype(int):                     # body outline at a few moments
         hexw = body_to_world(MOUNT[HEX_ORDER], *pose[k])
         ax.add_patch(Polygon(hexw, closed=True, fc='0.3', alpha=0.25, ec='0.2'))
         nose = body_to_world(np.array([[130, 0]]), *pose[k])[0]
@@ -417,9 +383,10 @@ def replay(path='teleop_log.npz', animate=True, every=2):
     a2 = fig.add_subplot(gs[1, 1], sharex=a1)
     for j, name in enumerate(['coxa', 'femur', 'tibia']):
         a2.plot(t, jrate[:, :, j].max(axis=1), lw=1, label=name)
-    a2.axhline(100, color='r', ls='--', lw=1)
+    lim = float(L['limit']) if 'limit' in L.files else 100.0
+    a2.axhline(lim, color='r', ls='--', lw=1)
     a2.set_ylabel('°/s')
-    a2.set_title('Fastest joint of each type (limit 100 °/s)')
+    a2.set_title(f'Fastest joint of each type (limit {lim:.0f} °/s)')
     a2.legend(fontsize=8, ncol=3, loc='upper right')
     mark_end(a2)
 
@@ -448,13 +415,13 @@ def replay(path='teleop_log.npz', animate=True, every=2):
     if failed:
         fig.text(0.5, 0.005, f'stopped at t={t[-1]:.2f}s: {reason}', color='r', ha='center')
 
-    # ---------------- 图 2：3D 回放 ----------------
+    # ---- fig 2: 3D replay ----
     anim = None
     if animate:
         z_ground = feet[:, :, 2].min()
 
         def leg_points(k):
-            """(6, 4, 3)：coxa、femur 关节、膝、脚尖，世界系。"""
+            """(6, 4, 3): coxa, femur joint, knee, toe in world frame."""
             out = np.zeros((6, 4, 3))
             c, s = np.cos(pose[k, 2]), np.sin(pose[k, 2])
             Rw = np.array([[c, -s, 0], [s, c, 0], [0, 0, 1]])
@@ -512,7 +479,7 @@ def replay(path='teleop_log.npz', animate=True, every=2):
             return []
 
         anim = FuncAnimation(fig3, update, frames=range(0, N, every), interval=1000 * every / rate)
-        # 想存成视频：anim.save('teleop.gif', fps=rate / every)   （需要 pillow）
+        # to save: anim.save('teleop.gif', fps=rate / every)  (needs pillow)
 
     plt.show()
     return anim
