@@ -33,6 +33,103 @@
     return { d: best.d, q: best.q, hull: h };
   }
 
+  /* ---------- 0. phase clocks ---------- */
+  const FR = { 0: '0', [1 / 6]: '1/6', [1 / 3]: '1/3', [1 / 2]: '1/2', [2 / 3]: '2/3', [5 / 6]: '5/6' };
+  const frac = v => { for (const k in FR) if (Math.abs(+k - v) < 1e-9) return FR[k]; return v.toFixed(2); };
+  const watch = (el, fn) => new IntersectionObserver(es => es.forEach(e => fn(e.isIntersecting))).observe(el);
+  // a clock face: phase 0 at the top, increasing clockwise; stance arc [0, b) orange, swing arc [b, 1) blue
+  function clock(ctx, c, r, b, phi, lw) {
+    const A = u => -Math.PI / 2 + 2 * Math.PI * u;
+    ctx.lineCap = 'butt';
+    [[0, b, C.accent], [b, 1, C.blue]].forEach(([u0, u1, col]) => { ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.beginPath(); ctx.arc(c[0], c[1], r, A(u0) + 0.02, A(u1) - 0.02); ctx.stroke(); });
+    ctx.strokeStyle = C.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(c[0], c[1], r - lw, 0, 7); ctx.stroke();
+    const h = [c[0] + (r - lw - 4) * Math.cos(A(phi)), c[1] + (r - lw - 4) * Math.sin(A(phi))];
+    seg(ctx, c, h, C.ink, Math.max(2, lw / 3)); dot(ctx, c, Math.max(3, lw / 3), C.ink); dot(ctx, h, Math.max(3, lw / 3.5), C.ink);
+  }
+  {
+    const cv = $('clock1'), ctx = cv.getContext('2d'), T = 2.5, b = 0.5, S = 120, Hh = 46;
+    let on = false; const t0 = performance.now();
+    function draw() {
+      const narrow = cv.clientWidth > 0 && cv.clientWidth < 620, W = narrow ? 560 : 1100, H = narrow ? 760 : 380;
+      if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; }
+      ctx.clearRect(0, 0, W, H);
+      const tt = Site.reduceMotion ? 5.75 : ((performance.now() - t0) / 1000) % 10, u = tt / T, laps = Math.floor(u), phi = u - laps;
+      const st = phi < b, s = st ? phi / b : (phi - b) / (1 - b);
+      const c = narrow ? [280, 175] : [180, 190], r = narrow ? 125 : 135;
+      clock(ctx, c, r, b, phi, 16);
+      [[0, '0'], [0.25, '¼'], [0.5, '½'], [0.75, '¾']].forEach(([q, txt]) => { const a = -Math.PI / 2 + 2 * Math.PI * q; label(ctx, txt, [c[0] + (r + 22) * Math.cos(a), c[1] + (r + 22) * Math.sin(a) + 5], C.muted, 14, 'center'); });
+      label(ctx, t('ck_stance'), [c[0] + r * 0.45, c[1] - r * 0.05], C.accent, 13, 'center');
+      label(ctx, t('ck_swing'), [c[0] - r * 0.45, c[1] - r * 0.05], C.blue, 13, 'center');
+      // readout
+      const rx = narrow ? 40 : 370, ry = narrow ? 352 : 92;
+      const rows = [[`t = ${tt.toFixed(2)} s`, C.ink], [`T = ${T} s`, C.muted], [`t / T = ${u.toFixed(2)}`, C.ink], [`${t('ck_laps')}: ${laps}`, C.muted], [`φ = ${phi.toFixed(2)}`, C.ink], [`${t(st ? 'ck_stance' : 'ck_swing')}, s = ${s.toFixed(2)}`, st ? C.accent : C.blue]];
+      rows.forEach(([txt, col], k) => label(ctx, txt, [rx, ry + k * 34], col, k === 4 ? 20 : 16));
+      // the foot's loop, seen from the body
+      const lx = narrow ? 280 : 830, ly = narrow ? 660 : 270, k = 1.6;
+      const P = (x, z) => [lx + k * x, ly - k * z];
+      seg(ctx, [lx - k * 120, ly + 8], [lx + k * 120, ly + 8], C.line, 1.5);
+      seg(ctx, P(S / 2, 0), P(-S / 2, 0), C.accent, 5);
+      ctx.strokeStyle = C.blue; ctx.lineWidth = 3; ctx.beginPath();
+      for (let j = 0; j <= 40; j++) { const q = j / 40, p = P(-S / 2 + S * cyc(q), Hh * (1 - Math.cos(2 * Math.PI * q)) / 2); j ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
+      ctx.stroke();
+      label(ctx, t('ck_lift'), [P(-S / 2, 0)[0], ly + 30], C.muted, 12, 'center');
+      label(ctx, t('ck_touch'), [P(S / 2, 0)[0], ly + 30], C.muted, 12, 'center');
+      label(ctx, t('ck_body'), [lx, ly - k * Hh - 30], C.muted, 12, 'center');
+      Site.cv.arrow(ctx, [lx - 40, ly - k * Hh - 50], [lx + 40, ly - k * Hh - 50], C.muted, 2);
+      const f = st ? P(S / 2 - S * s, 0) : P(-S / 2 + S * cyc(s), Hh * (1 - Math.cos(2 * Math.PI * s)) / 2);
+      dot(ctx, f, 10, st ? C.accent : C.blue);
+      if (on && !Site.reduceMotion) requestAnimationFrame(draw);
+    }
+    watch(cv, v => { const w = on; on = v; if (on && !w) requestAnimationFrame(draw); });
+    addEventListener('resize', () => { if (!on) draw(); });
+    Site.onLang(draw); Site.onTheme(draw); draw();
+  }
+  {
+    const cv = $('clock6'), ctx = cv.getContext('2d');
+    let g = 'tripod', play = !Site.reduceMotion, on = false, u = 2.3, last = 0;
+    // where each leg's clock sits: R1 R2 R3 L1 L2 L3, front up, the robot's left on the left
+    const POS = [[1, 0], [1, 1], [1, 2], [0, 0], [0, 1], [0, 2]];
+    function draw(now) {
+      const narrow = cv.clientWidth > 0 && cv.clientWidth < 620, W = narrow ? 560 : 1100, H = narrow ? 860 : 440;
+      if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; }
+      if (now && last && play) u += (now - last) / 1000 / CFG[g].T; last = now || 0;
+      ctx.clearRect(0, 0, W, H);
+      const [b, d] = GAITS[g], mphi = u % 1;
+      const mc = narrow ? [280, 160] : [180, 215], mr = narrow ? 105 : 120;
+      clock(ctx, mc, mr, 1, mphi, 3);
+      label(ctx, t('ck_master'), [mc[0], mc[1] + mr + 34], C.ink, 14, 'center');
+      label(ctx, `t / T = ${u.toFixed(2)}`, [mc[0], mc[1] + mr + 56], C.muted, 13, 'center');
+      // body outline between the clocks
+      const cx0 = narrow ? [150, 410] : [560, 930], cy0 = narrow ? [400, 560, 720] : [80, 220, 360], r = narrow ? 52 : 50;
+      ctx.strokeStyle = C.line; ctx.lineWidth = 1.5; ctx.setLineDash([5, 5]); ctx.beginPath();
+      ctx.moveTo((cx0[0] + cx0[1]) / 2, cy0[0] - 10); ctx.lineTo((cx0[0] + cx0[1]) / 2, cy0[2] + 10); ctx.stroke(); ctx.setLineDash([]);
+      label(ctx, t('g_front'), [(cx0[0] + cx0[1]) / 2, cy0[0] - 22], C.muted, 12, 'center');
+      let down = 0;
+      HX.LEGS.forEach((l, i) => {
+        const phi = (((u - d[i]) % 1) + 1) % 1, st = phi < b, c = [cx0[POS[i][0]], cy0[POS[i][1]]];
+        if (st) down++;
+        clock(ctx, c, r, b, phi, 9);
+        const side = POS[i][0] ? 1 : -1, fx = c[0] + side * (r + 28);
+        // the foot: filled when on the ground, hollow when in the air
+        ctx.lineWidth = 3; ctx.strokeStyle = st ? C.accent : C.blue; ctx.fillStyle = st ? C.accent : C.paper;
+        ctx.beginPath(); ctx.arc(fx, c[1], 9, 0, 7); ctx.fill(); ctx.stroke();
+        const tx = c[0] - side * (r + 16), al = side > 0 ? 'right' : 'left';
+        label(ctx, l.n, [tx, c[1] - 6], HX.COLORS[i], 15, al);
+        label(ctx, `δ = ${frac(d[i])}`, [tx, c[1] + 14], C.muted, 12, al);
+      });
+      label(ctx, `${t('ck_down')}: ${down}`, narrow ? [280, 830] : [(cx0[0] + cx0[1]) / 2, H - 14], C.ink, 15, 'center');
+      if (on && play) requestAnimationFrame(draw);
+    }
+    const seg6 = $('ck6Seg');
+    seg6.querySelectorAll('button').forEach(bt => bt.addEventListener('click', () => { g = bt.dataset.g; seg6.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === bt))); draw(); }));
+    const setP = p => { play = p; $('ck6play').setAttribute('aria-pressed', String(p)); $('ck6play').innerHTML = t(p ? 'bPause' : 'bPlay'); last = 0; if (p && on) requestAnimationFrame(draw); };
+    $('ck6play').addEventListener('click', () => setP(!play));
+    watch(cv, v => { const w = on; on = v; last = 0; if (on && !w && play) requestAnimationFrame(draw); });
+    addEventListener('resize', () => { if (!on || !play) draw(); });
+    Site.onLang(() => { setP(play); draw(); }); Site.onTheme(() => draw());
+    draw();
+  }
+
   /* ---------- 1. the gait timetable ---------- */
   const gc = $('gait'), gx = gc.getContext('2d'), gtIn = $('gt'), gtOut = gtIn.parentElement.querySelector('output');
   let gait = 'tripod', gt = 0.15, gplay = !Site.reduceMotion, gOn = false, gLast = 0;

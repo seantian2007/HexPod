@@ -35,6 +35,14 @@
     <figure class="fig plate"><img src="../media/rk/model_label.jpg" loading="lazy" data-i18n-alt="labelCap" alt="">
   <figcaption><span data-i18n="labelCap"></span> <span class="credit" data-i18n="credRk"></span></figcaption></figure>
   </div>
+  <p data-i18n="s1p3"></p>
+</section>
+</main>
+<div class="wide"><figure class="fig">
+  <svg class="sv" viewBox="0 0 900 290" role="img" data-i18n-aria="inAria"><text x="20" y="24" style="font-weight:600" data-i18n="in_ins"></text><text x="480" y="24" style="font-weight:600" data-i18n="in_rob"></text><ellipse cx="62" cy="128" rx="52" ry="36" class="fb"/><line x1="104" y1="128" x2="142" y2="136" class="sm" stroke-width="15" stroke-linecap="round"/><line x1="142" y1="136" x2="160" y2="130" class="sk" stroke-width="10" stroke-linecap="round"/><line x1="160" y1="130" x2="272" y2="66" class="sb" stroke-width="12" stroke-linecap="round"/><line x1="272" y1="66" x2="334" y2="204" class="sk" stroke-width="8" stroke-linecap="round"/><line x1="334" y1="204" x2="352" y2="216" class="sa" stroke-width="5" stroke-linecap="round"/><line x1="352" y1="216" x2="370" y2="225" class="sa" stroke-width="5" stroke-linecap="round"/><line x1="370" y1="225" x2="388" y2="232" class="sa" stroke-width="5" stroke-linecap="round"/><line x1="388" y1="232" x2="406" y2="237" class="sa" stroke-width="5" stroke-linecap="round"/><path d="M 406,237 q 10,0 12,10 M 406,237 q 8,4 6,14" fill="none" class="sa" stroke-width="2"/><line x1="122" y1="140" x2="100" y2="178" class="sl" stroke-width="1"/><text x="96" y="192" style="font-weight:600">coxa</text><text x="96" y="208" class="m" style="font-size:12px" data-i18n="in_coxa"></text><line x1="150" y1="128" x2="114" y2="106" class="sl" stroke-width="1"/><text x="110" y="84" style="font-weight:600">trochanter</text><text x="110" y="100" class="m" style="font-size:12px" data-i18n="in_tro"></text><line x1="214" y1="98" x2="172" y2="62" class="sl" stroke-width="1"/><text x="168" y="40" style="font-weight:600">femur</text><text x="168" y="56" class="m" style="font-size:12px" data-i18n="in_fem"></text><line x1="304" y1="134" x2="330" y2="142" class="sl" stroke-width="1"/><text x="326" y="120" style="font-weight:600">tibia</text><text x="326" y="136" class="m" style="font-size:12px" data-i18n="in_tib"></text><line x1="372" y1="228" x2="334" y2="252" class="sl" stroke-width="1"/><text x="330" y="266" style="font-weight:600">tarsus</text><text x="330" y="282" class="m" style="font-size:12px" data-i18n="in_tar"></text><rect x="478" y="70" width="52" height="80" rx="6" class="fb"/><line x1="530" y1="110" x2="610.6" y2="110" class="sm" stroke-width="12" stroke-linecap="round"/><line x1="610.6" y1="110" x2="696.2" y2="60.6" class="sb" stroke-width="12" stroke-linecap="round"/><line x1="696.2" y1="60.6" x2="740.6" y2="226.4" class="sk" stroke-width="9" stroke-linecap="round"/><circle cx="530.0" cy="110.0" r="7" class="fp sk" stroke-width="2"/><circle cx="610.6" cy="110.0" r="7" class="fp sk" stroke-width="2"/><circle cx="696.2" cy="60.6" r="7" class="fp sk" stroke-width="2"/><circle cx="740.6" cy="226.4" r="6" class="fa"/><line x1="480" y1="232.4" x2="880" y2="232.4" class="sl" stroke-width="1.5"/><text x="570.3" y="138" text-anchor="middle" style="font-weight:600">coxa</text><text x="570.3" y="154" text-anchor="middle" class="m" style="font-size:12px">L1 = 62</text><text x="641.4" y="69.3" text-anchor="end" class="b" style="font-weight:600">femur</text><text x="641.4" y="85.3" text-anchor="end" class="m" style="font-size:12px">L2 = 76</text><text x="734.4" y="143.5" style="font-weight:600">tibia</text><text x="734.4" y="159.5" class="m" style="font-size:12px">L3 = 132</text><text x="756.2" y="70" class="m" style="font-size:12px" data-i18n="in_servo"></text></svg>
+  <figcaption data-i18n="inCap"></figcaption></figure></div>
+<main>
+<section style="padding-top:0">
   <p data-i18n="s1p2"></p>
 </section>
 
@@ -48,7 +56,36 @@
 </section>
 
 <section>
+  <h2><span class="step" data-i18n="r1step"></span><span data-i18n="r1h"></span></h2>
+  <p data-i18n="r1p1"></p>
+  <div class="eq">cos φ = adjacent / L &nbsp;&nbsp;&nbsp; sin φ = opposite / L</div>
+  <p data-i18n="r1p2"></p>
+</section>
+</main>
+<div class="wide card widget">
+  <canvas id="trig" width="720" height="480" data-i18n-aria="trigAria"></canvas>
+  <div class="readout">
+    <div class="hint" data-i18n="trigHint"></div>
+    <div class="ctl"><label>φ</label><input type="range" id="phi" min="-180" max="180" step="1" value="30"><output></output></div>
+    <dl class="kv" id="tkv"></dl>
+    <div class="seg"><button type="button" id="phiA">φ = 30°</button><button type="button" id="phiB">φ = −75°</button></div>
+  </div>
+</div>
+<main>
+<section style="padding-top:0">
+  <p data-i18n="r1p3"></p>
+  <div class="note"><span class="t" data-i18n="degT"></span><span data-i18n="degNote"></span></div>
+</section>
+
+<section>
   <h2><span class="step" data-i18n="s3step"></span><span data-i18n="s3h"></span></h2>
+  <p data-i18n="s3p0"></p>
+  <div class="two">
+    <figure class="fig" style="margin:0">
+  <svg class="sv" viewBox="0 0 440 290" role="img" data-i18n-aria="frAria"><defs><marker id="fa1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fk"/></marker></defs><line x1="190" y1="190" x2="100" y2="254" class="sk" stroke-width="2.5" marker-end="url(#fa1)"/><line x1="190" y1="190" x2="350" y2="190" class="sk" stroke-width="2.5" marker-end="url(#fa1)"/><line x1="190" y1="190" x2="190" y2="40" class="sk" stroke-width="2.5" marker-end="url(#fa1)"/><text x="84" y="274" style="font-weight:600;font-size:17px">x</text><text x="358" y="196" style="font-weight:600;font-size:17px">y</text><text x="200" y="44" style="font-weight:600;font-size:17px">z</text><circle cx="190" cy="190" r="5" class="fk"/><text x="200" y="212" class="m" style="font-size:12px" data-i18n="fr_o"></text><defs><marker id="fa2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fa"/></marker></defs><path d="M 160,98 A 42 13 0 0 0 232,92" fill="none" class="sa" stroke-width="2.5" marker-end="url(#fa2)"/><text x="240" y="100" class="a" style="font-size:13px" data-i18n="fr_rz"></text><path d="M 296,214 A 13 34 0 0 0 304,166" fill="none" class="sa" stroke-width="2.5" marker-end="url(#fa2)"/><text x="312" y="160" class="a" style="font-size:13px" data-i18n="fr_ry"></text><text x="20" y="24" class="m" style="font-size:12px" data-i18n="fr_view"></text></svg>
+  <figcaption data-i18n="frCap"></figcaption></figure>
+    <div><p style="margin-top:0" data-i18n="s3p0b"></p><p data-i18n="s3p0c"></p></div>
+  </div>
   <p data-i18n="s3p1"></p>
 </section>
 </main>
@@ -107,6 +144,14 @@
 <main>
 <section style="padding-top:0">
   <p data-i18n="s4p2"></p>
+</section>
+</main>
+<div class="wide"><figure class="fig">
+  <svg class="sv" viewBox="0 0 900 321" role="img" data-i18n-aria="chAria"><defs><marker id="vfk" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fk"/></marker><marker id="vfbl" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fbl"/></marker><marker id="vfa" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fa"/></marker><marker id="vfg" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fg"/></marker></defs><line x1="90.0" y1="20.0" x2="90.0" y2="300.0" class="sm" stroke-width="1" stroke-dasharray="2 4"/><line x1="90.0" y1="120.0" x2="189.2" y2="120.0" class="sm" stroke-width="5" marker-end="url(#vfk)"/><line x1="189.2" y1="120.0" x2="294.5" y2="59.2" class="sb" stroke-width="5" marker-end="url(#vfbl)"/><line x1="294.5" y1="59.2" x2="349.2" y2="263.2" class="sk" stroke-width="5" marker-end="url(#vfk)"/><line x1="189.2" y1="120.0" x2="294.5" y2="120.0" class="sg" stroke-width="1.6" stroke-dasharray="5 4"/><line x1="294.5" y1="120.0" x2="294.5" y2="59.2" class="sb" stroke-width="1.6" stroke-dasharray="5 4"/><line x1="294.5" y1="59.2" x2="349.2" y2="59.2" class="sg" stroke-width="1.6" stroke-dasharray="5 4"/><line x1="349.2" y1="59.2" x2="349.2" y2="263.2" class="sb" stroke-width="1.6" stroke-dasharray="5 4"/><text x="139.6" y="140.0" text-anchor="middle" class="m" style="font-size:12px">62</text><text x="241.9" y="138.0" text-anchor="middle" class="g" style="font-size:12px">65.8</text><text x="288.5" y="106.0" text-anchor="end" class="b" style="font-size:12px">38.0</text><text x="321.8" y="51.2" text-anchor="middle" class="g" style="font-size:12px">34.2</text><text x="357.2" y="161.2" text-anchor="start" class="b" style="font-size:12px">−127.5</text><circle cx="349.2" cy="263.2" r="6" class="fa"/><circle cx="90.0" cy="120.0" r="5" class="fk"/><line x1="90.0" y1="289.2" x2="349.2" y2="289.2" class="sg" stroke-width="2.5"/><text x="219.6" y="309.2" text-anchor="middle" class="g" style="font-weight:600">r = 62 + 65.8 + 34.2 = 162.0</text><line x1="60.0" y1="120.0" x2="60.0" y2="263.2" class="sb" stroke-width="2.5"/><text x="52.0" y="265.2" text-anchor="end" class="b" style="font-weight:600">z</text><text x="52.0" y="281.2" text-anchor="end" class="b" style="font-size:12px">−89.5</text><text x="470" y="40" style="font-weight:600" data-i18n="ch_dir"></text><text x="470" y="74" class="m" style="font-weight:600">coxa</text><text x="532" y="74" style="font-size:12px">0°</text><text x="484" y="94" class="g" style="font-size:12px">→ 62</text><text x="684" y="94" class="b" style="font-size:12px">↕ 0</text><text x="470" y="126" class="b" style="font-weight:600">femur</text><text x="532" y="126" style="font-size:12px">θ2 = 30°</text><text x="484" y="146" class="g" style="font-size:12px">→ 76·cos 30° = 65.8</text><text x="684" y="146" class="b" style="font-size:12px">↕ 76·sin 30° = 38.0</text><text x="470" y="178" class="" style="font-weight:600">tibia</text><text x="532" y="178" style="font-size:12px">θ2 − θ3 = −75°</text><text x="484" y="198" class="g" style="font-size:12px">→ 132·cos(−75°) = 34.2</text><text x="684" y="198" class="b" style="font-size:12px">↕ 132·sin(−75°) = −127.5</text><text x="470" y="244" class="b" style="font-weight:600">z = 0 + 38.0 − 127.5 = −89.5</text><text x="470" y="274" class="m" style="font-size:12px" data-i18n="ch_note1"></text><text x="470" y="292" class="m" style="font-size:12px" data-i18n="ch_note2"></text></svg>
+  <figcaption data-i18n="chCap"></figcaption></figure></div>
+<main>
+<section style="padding-top:0">
+  <p data-i18n="s4p3"></p>
   <div class="eq">r = L1 + L2·cos θ2 + L3·cos(θ2 − θ3)<br>z = &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;L2·sin θ2 + L3·sin(θ2 − θ3)</div>
   <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="s4w"></span></div>
 </section>
@@ -135,8 +180,16 @@
 
 <section>
   <h2><span class="step" data-i18n="s6step"></span><span data-i18n="s6h"></span></h2>
+  <p data-i18n="s6p0"></p>
   <p data-i18n="s6p1"></p>
   <div class="eq">T = Rz(θ1) · Tx(62) · Ry(−θ2) · Tx(76) · Ry(θ3) · Tx(132)</div>
+</section>
+</main>
+<div class="wide"><figure class="fig">
+  <svg class="sv" viewBox="0 0 900 212" role="img" data-i18n-aria="tfAria"><defs><marker id="tx" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fa"/></marker><marker id="tz" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fbl"/></marker></defs><rect x="12" y="8" width="140" height="196" rx="10" class="fp sl" stroke-width="1"/><text x="82" y="30" text-anchor="middle" style="font-weight:600;font-size:13px" data-i18n="tf0"></text><text x="22" y="196" class="m" style="font-size:11px">0</text><circle cx="30.0" cy="104.0" r="3.5" class="fk"/><line x1="30.0" y1="104.0" x2="56.0" y2="104.0" class="sa" stroke-width="2.2" marker-end="url(#tx)"/><line x1="30.0" y1="104.0" x2="30.0" y2="78.0" class="sb" stroke-width="2.2" marker-end="url(#tz)"/><text x="64.5" y="108.0" class="a" style="font-size:11px">x</text><rect x="160" y="8" width="140" height="196" rx="10" class="fp sl" stroke-width="1"/><text x="230" y="30" text-anchor="middle" style="font-weight:600;font-size:13px">Tx(62)</text><text x="170" y="196" class="m" style="font-size:11px">1</text><line x1="178.0" y1="104.0" x2="212.1" y2="104.0" class="sm" stroke-width="5" stroke-linecap="round"/><circle cx="178.0" cy="104.0" r="3.5" class="fk"/><line x1="212.1" y1="104.0" x2="238.1" y2="104.0" class="sa" stroke-width="2.2" marker-end="url(#tx)"/><line x1="212.1" y1="104.0" x2="212.1" y2="78.0" class="sb" stroke-width="2.2" marker-end="url(#tz)"/><text x="246.6" y="108.0" class="a" style="font-size:11px">x</text><rect x="308" y="8" width="140" height="196" rx="10" class="fp sl" stroke-width="1"/><text x="378" y="30" text-anchor="middle" style="font-weight:600;font-size:13px">Ry(−θ2)</text><text x="318" y="196" class="m" style="font-size:11px">2</text><line x1="326.0" y1="104.0" x2="360.1" y2="104.0" class="sm" stroke-width="5" stroke-linecap="round"/><circle cx="326.0" cy="104.0" r="3.5" class="fk"/><line x1="360.1" y1="104.0" x2="382.6" y2="91.0" class="sa" stroke-width="2.2" marker-end="url(#tx)"/><line x1="360.1" y1="104.0" x2="347.1" y2="81.5" class="sb" stroke-width="2.2" marker-end="url(#tz)"/><text x="390.2" y="91.8" class="a" style="font-size:11px">x</text><rect x="456" y="8" width="140" height="196" rx="10" class="fp sl" stroke-width="1"/><text x="526" y="30" text-anchor="middle" style="font-weight:600;font-size:13px">Tx(76)</text><text x="466" y="196" class="m" style="font-size:11px">3</text><line x1="474.0" y1="104.0" x2="508.1" y2="104.0" class="sm" stroke-width="5" stroke-linecap="round"/><line x1="508.1" y1="104.0" x2="544.3" y2="83.1" class="sb" stroke-width="5" stroke-linecap="round"/><circle cx="474.0" cy="104.0" r="3.5" class="fk"/><line x1="544.3" y1="83.1" x2="566.8" y2="70.1" class="sa" stroke-width="2.2" marker-end="url(#tx)"/><line x1="544.3" y1="83.1" x2="531.3" y2="60.6" class="sb" stroke-width="2.2" marker-end="url(#tz)"/><text x="574.4" y="70.8" class="a" style="font-size:11px">x</text><rect x="604" y="8" width="140" height="196" rx="10" class="fp sl" stroke-width="1"/><text x="674" y="30" text-anchor="middle" style="font-weight:600;font-size:13px">Ry(θ3)</text><text x="614" y="196" class="m" style="font-size:11px">4</text><line x1="622.0" y1="104.0" x2="656.1" y2="104.0" class="sm" stroke-width="5" stroke-linecap="round"/><line x1="656.1" y1="104.0" x2="692.3" y2="83.1" class="sb" stroke-width="5" stroke-linecap="round"/><circle cx="622.0" cy="104.0" r="3.5" class="fk"/><line x1="692.3" y1="83.1" x2="699.0" y2="108.2" class="sa" stroke-width="2.2" marker-end="url(#tx)"/><line x1="692.3" y1="83.1" x2="717.4" y2="76.4" class="sb" stroke-width="2.2" marker-end="url(#tz)"/><text x="702.7" y="118.5" class="a" style="font-size:11px">x</text><rect x="752" y="8" width="140" height="196" rx="10" class="fp sl" stroke-width="1"/><text x="822" y="30" text-anchor="middle" style="font-weight:600;font-size:13px">Tx(132)</text><text x="762" y="196" class="m" style="font-size:11px">5</text><line x1="770.0" y1="104.0" x2="804.1" y2="104.0" class="sm" stroke-width="5" stroke-linecap="round"/><line x1="804.1" y1="104.0" x2="840.3" y2="83.1" class="sb" stroke-width="5" stroke-linecap="round"/><line x1="840.3" y1="83.1" x2="859.1" y2="153.2" class="sk" stroke-width="5" stroke-linecap="round"/><circle cx="770.0" cy="104.0" r="3.5" class="fk"/><line x1="859.1" y1="153.2" x2="865.8" y2="178.3" class="sa" stroke-width="2.2" marker-end="url(#tx)"/><line x1="859.1" y1="153.2" x2="884.2" y2="146.5" class="sb" stroke-width="2.2" marker-end="url(#tz)"/><text x="869.5" y="188.6" class="a" style="font-size:11px">x</text><circle cx="859.1" cy="153.2" r="5" class="fa"/></svg>
+  <figcaption data-i18n="tfCap"></figcaption></figure></div>
+<main>
+<section style="padding-top:0">
   <p data-i18n="s6p2"></p>
 </section>
 
@@ -160,8 +213,8 @@
     <li class="reward"><span class="no-">★★</span><span data-i18n="cpR2"></span></li>
     <li class="reward"><span class="no-">🤖</span><span data-i18n="cpR3"></span></li>
   </ol>
-  <div class="cta"><span class="btn off" data-i18n="nbSoon"></span> <a href="../stage3/index.html" data-i18n="seeS3"></a></div>
-  <p class="cap" data-i18n="nbSoonNote"></p>
+  <div class="cta"><a class="btn" id="nbLink" href="notebook/index.html" data-keep-lang data-i18n="openNb"></a></div>
+  
 </section>
 
 <section>

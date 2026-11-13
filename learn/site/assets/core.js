@@ -27,9 +27,8 @@ const COMMON_I18N = {
     stage: 'Stage', soon: 'coming soon',
     workedT: 'Worked example', trapT: 'Common mix-up', robotT: 'Have the robot?',
     predictBtn: 'Show the answer',
-    nbSoon: 'Practice notebook: coming soon',
-    nbSoonNote: 'The exercises below are planned for this stage\'s notebook. Stage 3 shows what the finished version looks like.',
     seeS3: 'See the Stage 3 notebook →',
+    openNb: 'Open the practice notebook →',
     fromBuild: 'From our build',
     credOurs: 'our build', credRk: 'rookidroid/hexapod · GPL-3.0', credPD: 'public domain · Wikimedia Commons', credWM: 'Wikimedia Commons · see file page for author & license',
     footNote: 'Hardware design: <a href="https://github.com/rookidroid/hexapod">rookidroid/hexapod</a> (Macaroon, GPL-3.0); images marked “rookidroid” come from that repository. Everything else (math, code, photos and videos marked “our build”) is from building this robot from scratch.',
@@ -43,9 +42,8 @@ const COMMON_I18N = {
     stage: '阶段', soon: '即将推出',
     workedT: '算一个例子', trapT: '容易搞混', robotT: '有实机的话',
     predictBtn: '看答案',
-    nbSoon: '练习 notebook：即将推出',
-    nbSoonNote: '下面是这一阶段 notebook 计划包含的练习。做好的样子可以先看阶段 3。',
     seeS3: '看阶段 3 的 notebook →',
+    openNb: '打开练习 notebook →',
     fromBuild: '我们踩过的坑',
     credOurs: '我们的实机', credRk: 'rookidroid/hexapod · GPL-3.0', credPD: '公有领域 · Wikimedia Commons', credWM: 'Wikimedia Commons · 作者与许可见文件页',
     footNote: '硬件设计：<a href="https://github.com/rookidroid/hexapod">rookidroid/hexapod</a>（Macaroon，GPL-3.0），标注“rookidroid”的图片来自该仓库。其余内容（数学、代码，以及标注“我们的实机”的照片和视频）都来自从零做这台机器人的过程。',
@@ -133,7 +131,15 @@ const Site = (() => {
   /* external images that may fail to load: hide the whole figure instead of showing a broken icon */
   function guards() {
     document.querySelectorAll('img[data-ext], video[data-ext]').forEach(el => {
-      el.addEventListener('error', () => { const f = el.closest('figure'); if (f) f.hidden = true; }, true);
+      const hide = () => {
+        const f = el.closest('figure'); if (!f) return;
+        f.hidden = true;
+        const g = f.parentElement;   // a gallery left with only its text: let the text take the full width
+        const left = g && g.classList.contains('gallery') ? [...g.children].filter(c => !c.hidden) : [];
+        if (left.length === 1 && left[0].tagName !== 'FIGURE') g.style.gridTemplateColumns = '1fr';
+      };
+      el.addEventListener('error', hide, true);
+      if (el.tagName === 'IMG' && el.complete && el.naturalWidth === 0 && el.getAttribute('src')) hide();
     });
   }
 
@@ -182,7 +188,13 @@ const Site = (() => {
   }
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  chrome(); predicts(); guards();
+  function wideSvgs() {
+    document.querySelectorAll('figure.fig > svg.sv').forEach(sv => {
+      const vb = (sv.getAttribute('viewBox') || '').split(/\s+/).map(Number);
+      if (vb[2] >= 760) sv.parentElement.classList.add('scroll', 'wsv');
+    });
+  }
+  chrome(); predicts(); guards(); wideSvgs();
   document.addEventListener('DOMContentLoaded', () => { });
   apply(); clips();
   return { t, get lang() { return lang; }, onLang(f) { hooks.push(f); }, onTheme(f) { themeHooks.push(f); }, C, cv, kv, pill, slider, ROOT, reduceMotion, D2R: Math.PI / 180 };

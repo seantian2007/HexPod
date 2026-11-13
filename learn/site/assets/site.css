@@ -189,3 +189,23 @@ a.scard:hover{border-color:var(--accent);transform:translateY(-2px)}
 /* joystick pad inside a widget */
 .padrow{display:grid;grid-template-columns:132px 1fr;gap:12px;align-items:center}
 .widget canvas#pad{width:132px;aspect-ratio:1;border-radius:50%;cursor:grab;background:var(--bg);border:1px solid var(--line)}
+
+/* matrices drawn with bracket borders inside an equation line */
+.eqm{display:flex;flex-wrap:nowrap;align-items:center;gap:10px;white-space:nowrap}
+.mtx{display:inline-grid;grid-template-columns:repeat(var(--c),auto);gap:3px 16px;padding:3px 9px;border-left:2px solid var(--ink);border-right:2px solid var(--ink);border-radius:7px;text-align:center}
+.eqt{white-space:pre}
+/* plain note box (definitions, units) */
+.note{border-left:3px solid var(--blue);background:var(--blue-soft);border-radius:0 8px 8px 0;padding:10px 14px;margin:12px 0;font-size:15px}
+.note .t{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:2px}
+ul.cols{padding-left:1.2em;margin:10px 0}
+ul.cols li{margin:6px 0}
+/* symbol table: what each letter means */
+table.sym{border-collapse:collapse;width:100%;font-size:14.5px;margin:12px 0}
+table.sym td{padding:5px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+table.sym td:first-child{font-family:var(--f-mono);white-space:nowrap;color:var(--accent);width:1%}
+.eqm.wrap{flex-wrap:wrap;row-gap:14px;white-space:normal}
+.eqm.wrap .eqt{white-space:pre}
+.eqg{display:inline-flex;align-items:center;gap:10px;margin-right:18px}
+
+@media (max-width:640px){figure.wsv{overflow-x:auto;-webkit-overflow-scrolling:touch}figure.wsv>svg.sv{min-width:680px}figure.wsv>figcaption{position:sticky;left:0;max-width:calc(100vw - 48px)}}
+.svgbox{font:12px/1.35 var(--f-mono);color:var(--ink);text-align:center;display:flex;align-items:center;justify-content:center;height:100%;overflow:hidden}

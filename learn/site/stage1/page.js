@@ -62,7 +62,36 @@
   [b1, b2, b3].forEach(b => Site.slider(b, v => `${v}°`, draw3));
   $('trail').addEventListener('click', e => { trailOn = !trailOn; e.currentTarget.setAttribute('aria-pressed', String(trailOn)); if (!trailOn) trail = []; draw3(); });
 
-  const redraw = () => { drawSide(); draw3(); };
+  /* ---------- refresher: cos and sin as the shadows of one link ---------- */
+  const tv = $('trig'), tc = tv.getContext('2d'), tp = $('phi'), LT = 132;
+  const setPhi = v => { tp.value = v; tp.dispatchEvent(new Event('input')); };
+  function drawTrig() {
+    const W = tv.width, H = tv.height, ph = +tp.value, a = ph * D2R, S = 1.5, O = [W / 2, H / 2];
+    tc.clearRect(0, 0, W, H); grid(tc, W, H, O[0], O[1], S, 20);
+    const P = (x, z) => [O[0] + x * S, O[1] - z * S];
+    seg(tc, P(-170, 0), P(170, 0), C.muted, 1.2); seg(tc, P(0, -150), P(0, 150), C.muted, 1.2);
+    label(tc, t('tg_h'), P(172, 4), C.muted, 13, 'right'); label(tc, t('tg_v'), P(4, 146), C.muted, 13);
+    tc.strokeStyle = C.line; tc.lineWidth = 1.5; tc.setLineDash([4, 5]); tc.beginPath(); tc.arc(O[0], O[1], LT * S, 0, 2 * Math.PI); tc.stroke(); tc.setLineDash([]);
+    const c = Math.cos(a), s = Math.sin(a), E = [LT * c, LT * s], X = P(E[0], 0), Q = P(...E);
+    if (Math.abs(s) > 0.06 && Math.abs(c) > 0.06) {
+      const dx = -Math.sign(c) * 11, dy = Math.sign(s) * 11;
+      tc.strokeStyle = C.muted; tc.lineWidth = 1.2; tc.beginPath(); tc.moveTo(X[0] + dx, X[1]); tc.lineTo(X[0] + dx, X[1] - dy); tc.lineTo(X[0], X[1] - dy); tc.stroke();
+    }
+    seg(tc, P(0, 0), X, C.good, 5); seg(tc, X, Q, C.blue, 5);
+    seg(tc, P(0, 0), Q, C.ink, 8);
+    tc.strokeStyle = C.accent; tc.lineWidth = 2.5; tc.beginPath(); tc.arc(O[0], O[1], 42, 0, -a, a > 0); tc.stroke();
+    label(tc, 'φ', [O[0] + 58 * Math.cos(a / 2) - 5, O[1] - 58 * Math.sin(a / 2) + 6], C.accent, 18);
+    dot(tc, P(0, 0), 5, C.ink); dot(tc, Q, 7, C.accent);
+    label(tc, `L·cos φ = ${f1(E[0])}`, [(O[0] + X[0]) / 2, X[1] + (s >= 0 ? 24 : -14)], C.good, 15, 'center');
+    label(tc, `L·sin φ = ${f1(E[1])}`, [X[0] + (c >= 0 ? 12 : -12), (X[1] + Q[1]) / 2 + 5], C.blue, 15, c >= 0 ? 'left' : 'right');
+    label(tc, 'L = 132', [(O[0] + Q[0]) / 2 + (s * c >= 0 ? -12 : 12), (O[1] + Q[1]) / 2 + (s * c >= 0 ? -10 : -10)], C.ink, 14, s * c >= 0 ? 'right' : 'left');
+    Site.kv($('tkv'), [['φ', `${ph}°`], ['cos φ', c.toFixed(3)], ['sin φ', s.toFixed(3)], ['L·cos φ', `${f1(E[0])} mm`], ['L·sin φ', `${f1(E[1])} mm`]]);
+  }
+  Site.cv.dragOn(tv, p => { const W = tv.width, H = tv.height; setPhi(Math.round(Math.atan2(H / 2 - p[1], p[0] - W / 2) / D2R)); });
+  Site.slider(tp, v => `${v}°`, drawTrig);
+  $('phiA').addEventListener('click', () => setPhi(30)); $('phiB').addEventListener('click', () => setPhi(-75));
+
+  const redraw = () => { drawSide(); draw3(); drawTrig(); };
   Site.onLang(redraw); Site.onTheme(redraw);
   redraw();
 })();
