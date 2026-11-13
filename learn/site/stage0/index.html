@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stage 0 · Servos & power — HexPod Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-root="../" data-page="s0">
+<div class="bar"><div class="in gutter"></div></div>
+
+<div class="gutter">
+<div class="wrap"><nav class="strip" id="strip" aria-label="stages"></nav></div>
+<header class="hero">
+  <div>
+    <div class="eyebrow" data-i18n="eyebrow"></div>
+    <h1 data-i18n="h1"></h1>
+    <p class="sub" data-i18n="sub"></p>
+    <div class="mission"><span style="font-size:22px">🎯</span><div data-i18n="mission"></div></div>
+    <div class="meta"><span data-i18n="metaTime"></span><span data-i18n="metaPre"></span><span data-i18n="metaTools"></span></div>
+  </div>
+  <div class="stage-canvas">
+    <figure class="fig plate"><img src="../media/rk/25kg_servo.jpg" loading="lazy" data-i18n-alt="heroCap" alt="">
+  <figcaption><span data-i18n="heroCap"></span> <span class="credit" data-i18n="credRk"></span></figcaption></figure>
+  </div>
+</header>
+<main>
+<section>
+  <h2><span class="step" data-i18n="s1step"></span><span data-i18n="s1h"></span></h2>
+  <p data-i18n="s1p1"></p>
+  <div class="two">
+    <figure class="fig" style="margin:0">
+  <svg class="sv" viewBox="0 0 500 300" role="img" data-i18n-aria="loopAria">
+    <defs><marker id="a0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fa"/></marker>
+    <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fbl"/></marker></defs>
+    <text x="10" y="34" class="a" data-i18n="lp_in"></text>
+    <line x1="10" y1="48" x2="98" y2="48" class="sa" stroke-width="2.5" marker-end="url(#a0)"/>
+    <rect x="102" y="18" width="130" height="64" rx="10" class="fp sk" stroke-width="1.5"/>
+    <text x="167" y="44" text-anchor="middle" style="font-weight:600" data-i18n="lp_chip"></text>
+    <text x="167" y="66" text-anchor="middle" class="m" style="font-size:11px" data-i18n="lp_chip2"></text>
+    <line x1="234" y1="50" x2="290" y2="50" class="sk" stroke-width="2" marker-end="url(#a0)"/>
+    <rect x="294" y="18" width="150" height="64" rx="10" class="fp sk" stroke-width="1.5"/>
+    <text x="369" y="44" text-anchor="middle" style="font-weight:600" data-i18n="lp_motor"></text>
+    <text x="369" y="66" text-anchor="middle" class="m" style="font-size:11px" data-i18n="lp_motor2"></text>
+    <line x1="369" y1="84" x2="369" y2="132" class="sk" stroke-width="2" marker-end="url(#a0)"/>
+    <rect x="294" y="136" width="150" height="64" rx="10" class="fp sk" stroke-width="1.5"/>
+    <text x="369" y="162" text-anchor="middle" style="font-weight:600" data-i18n="lp_gear"></text>
+    <text x="369" y="184" text-anchor="middle" class="m" style="font-size:11px" data-i18n="lp_gear2"></text>
+    <line x1="369" y1="202" x2="369" y2="236" class="sk" stroke-width="2" marker-end="url(#a0)"/>
+    <circle cx="369" cy="262" r="22" class="fas sa" stroke-width="2"/><line x1="369" y1="262" x2="400" y2="246" class="sa" stroke-width="5" stroke-linecap="round"/>
+    <text x="398" y="276" class="a" style="font-size:12px" data-i18n="lp_horn"></text>
+    <path d="M 345 262 L 167 262 L 167 86" fill="none" class="sb" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#a1)"/>
+    <rect x="182" y="236" width="128" height="52" rx="10" class="fbs sb" stroke-width="1.5"/>
+    <text x="246" y="258" text-anchor="middle" class="b" style="font-weight:600" data-i18n="lp_pot"></text>
+    <text x="246" y="278" text-anchor="middle" class="b" style="font-size:11px" data-i18n="lp_pot2"></text>
+    <text x="20" y="180" class="b" style="font-size:12px" data-i18n="lp_fb"></text>
+  </svg>
+  <figcaption data-i18n="loopCap"></figcaption></figure>
+    <figure class="fig plate"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Inside_a_servo_motor.JPG/640px-Inside_a_servo_motor.JPG" loading="lazy" data-ext alt="" data-i18n-alt="webServo">
+  <figcaption><span data-i18n="webServo"></span> <a class="credit" href="https://commons.wikimedia.org/wiki/File:Inside_a_servo_motor.JPG" data-i18n="credWM"></a></figcaption></figure>
+  </div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s2step"></span><span data-i18n="s2h"></span></h2>
+  <div class="predict">
+    <p style="margin-top:0" data-i18n="predictQ"></p>
+    <button class="reveal" type="button" data-i18n="predictBtn"></button>
+    <div class="answer" hidden><p data-i18n="predictA"></p></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s3step"></span><span data-i18n="s3h"></span></h2>
+  <p data-i18n="s3p1"></p>
+</section>
+</main>
+<div class="wide card widget">
+  <canvas id="pulse" width="720" height="540" data-i18n-aria="pulseAria"></canvas>
+  <div class="readout">
+    <div class="hint" data-i18n="pulseHint"></div>
+    <div class="ctl"><label>µs</label><input type="range" id="us" min="500" max="2500" step="1" value="1500"><output></output></div>
+    <div class="seg"><button type="button" id="m1">−1 µs</button><button type="button" id="p1">+1 µs</button><button type="button" id="m10">−10 µs</button><button type="button" id="p10">+10 µs</button></div>
+    <dl class="kv" id="pkv"></dl>
+    <div id="pst"></div>
+  </div>
+</div>
+<main>
+<section style="padding-top:0">
+  <p data-i18n="s3p2"></p>
+  <div class="eq">θ = s · 0.0901 °/µs · (µs − µs₀)</div>
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="s3w"></span></div>
+  <div class="trap"><span class="t" data-i18n="trapT"></span><span data-i18n="s3trap"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s4step"></span><span data-i18n="s4h"></span></h2>
+  <p data-i18n="s4p1"></p>
+  <div class="eq">1 tick = 20 000 µs / 4096 ≈ 4.88 µs ≈ 0.44° ≈ 1.6 mm</div>
+  <div class="trap"><span class="t" data-i18n="trapT"></span><span data-i18n="s4trap"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s5step"></span><span data-i18n="s5h"></span></h2>
+  <p data-i18n="s5p1"></p>
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="s5w"></span></div>
+  <p data-i18n="s5p2"></p>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s6step"></span><span data-i18n="s6h"></span></h2>
+  <p data-i18n="s6p1"></p>
+</section>
+</main>
+<div class="wide"><figure class="fig">
+  <svg class="sv" viewBox="0 0 900 280" role="img" data-i18n-aria="pwAria"><rect x="250" y="20" width="2.0" height="20" rx="3" class="fbl"/><text x="258.0" y="35" class="b">0.04 A</text><text x="240" y="35" text-anchor="end" data-i18n="pw1"></text><rect x="250" y="56" width="2.4" height="20" rx="3" class="fbl"/><text x="258.4" y="71" class="b">0.1 A</text><text x="240" y="71" text-anchor="end" data-i18n="pw2"></text><rect x="250" y="92" width="67.2" height="20" rx="3" class="fbl"/><text x="323.2" y="107" class="b">2.8 A</text><text x="240" y="107" text-anchor="end" data-i18n="pw3"></text><rect x="250" y="128" width="120.0" height="20" rx="3" class="fbl"/><text x="376.0" y="143" class="b">&gt; 5 A</text><text x="240" y="143" text-anchor="end" data-i18n="pw4"></text><rect x="250" y="164" width="144.0" height="20" rx="3" class="fbl" opacity=".35"/><rect x="394.0" y="164" width="96.0" height="20" rx="3" class="fa"/><text x="496.0" y="179" class="a">6–10 A</text><text x="240" y="179" text-anchor="end" data-i18n="pw5"></text><rect x="250" y="200" width="360.0" height="20" rx="3" class="fbl" opacity=".35"/><rect x="610.0" y="200" width="240.0" height="20" rx="3" class="fa"/><text x="856.0" y="215" class="a">15–25 A</text><text x="240" y="215" text-anchor="end" data-i18n="pw6"></text><line x1="322" y1="10" x2="322" y2="236" class="sr" stroke-width="2" stroke-dasharray="5 4"/><text x="328" y="250" class="r" style="font-size:12px" data-i18n="pwLim"></text><text x="250" y="270" text-anchor="middle" class="m" style="font-size:11px">0</text><text x="370" y="270" text-anchor="middle" class="m" style="font-size:11px">5</text><text x="490" y="270" text-anchor="middle" class="m" style="font-size:11px">10</text><text x="610" y="270" text-anchor="middle" class="m" style="font-size:11px">15</text><text x="730" y="270" text-anchor="middle" class="m" style="font-size:11px">20</text><text x="850" y="270" text-anchor="middle" class="m" style="font-size:11px">25</text><text x="864" y="270" class="m" style="font-size:11px">A</text></svg>
+  <figcaption data-i18n="pwCap"></figcaption></figure></div>
+<main>
+<section style="padding-top:0">
+  <div class="trap"><span class="t" data-i18n="trapT"></span><span data-i18n="s6trap"></span></div>
+  <div class="robot"><span class="t" data-i18n="robotT"></span><span data-i18n="s6robot"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="prstep"></span><span data-i18n="prh"></span></h2>
+  <p data-i18n="prp1"></p>
+  <ol class="ladder">
+    <li><span class="no-">1</span><span data-i18n="cp1"></span></li>
+    <li><span class="no-">2</span><span data-i18n="cp2"></span></li>
+    <li><span class="no-">3</span><span data-i18n="cp3"></span></li>
+    <li><span class="no-">4</span><span data-i18n="cp4"></span></li>
+    <li class="reward"><span class="no-">★</span><span data-i18n="cpR1"></span></li>
+    <li class="reward"><span class="no-">🤖</span><span data-i18n="cpR2"></span></li>
+  </ol>
+  <div class="cta"><span class="btn off" data-i18n="nbSoon"></span> <a href="../stage3/index.html" data-i18n="seeS3"></a></div>
+  <p class="cap" data-i18n="nbSoonNote"></p>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="fromBuild"></span><span data-i18n="bgh"></span></h2>
+  <p data-i18n="bgp1"></p>
+  
+  <div class="log">
+    <div class="card"><span class="tag" data-i18n="bug1t"></span><span data-i18n="bug1"></span></div>
+    <div class="card"><span class="tag" data-i18n="bug2t"></span><span data-i18n="bug2"></span></div>
+    <div class="card"><span class="tag" data-i18n="bug3t"></span><span data-i18n="bug3"></span></div>
+    <div class="card"><span class="tag" data-i18n="bug4t"></span><span data-i18n="bug4"></span></div>
+  </div>
+</section>
+</main>
+<nav class="pager" id="pager"></nav>
+<div class="sitefoot" id="sitefoot"></div>
+</div>
+<script src="../hexview.js"></script>
+<script src="i18n.js"></script>
+<script src="../assets/core.js"></script>
+<script src="page.js"></script>
+</body>
+</html>

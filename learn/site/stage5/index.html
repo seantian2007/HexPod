@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stage 5 · Body kinematics — HexPod Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-root="../" data-page="s5">
+<div class="bar"><div class="in gutter"></div></div>
+
+<div class="gutter">
+<div class="wrap"><nav class="strip" id="strip" aria-label="stages"></nav></div>
+<header class="hero">
+  <div>
+    <div class="eyebrow" data-i18n="eyebrow"></div>
+    <h1 data-i18n="h1"></h1>
+    <p class="sub" data-i18n="sub"></p>
+    <div class="mission"><span style="font-size:22px">🎯</span><div data-i18n="mission"></div></div>
+    <div class="meta"><span data-i18n="metaTime"></span><span data-i18n="metaPre"></span><span data-i18n="metaTools"></span></div>
+  </div>
+  <div class="stage-canvas">
+    <figure class="fig "><video class="clip" data-src="../media/ours/body_dance.mp4" poster="../media/ours/body_dance.jpg"></video>
+  <figcaption><span data-i18n="heroCap"></span> <span class="credit" data-i18n="credOurs"></span></figcaption></figure>
+  </div>
+</header>
+<main>
+<section>
+  <h2><span class="step" data-i18n="s1step"></span><span data-i18n="s1h"></span></h2>
+  <p data-i18n="s1p1"></p>
+</section>
+</main>
+<div class="wide"><figure class="fig">
+  <svg class="sv" viewBox="0 0 900 170" role="img" data-i18n-aria="frAria">
+    <defs><marker id="f1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fa"/></marker></defs>
+    <rect x="10" y="30" width="170" height="100" rx="12" class="fp sk" stroke-width="1.5"/>
+    <text x="95" y="62" text-anchor="middle" style="font-weight:600" data-i18n="fr1"></text><text x="95" y="88" text-anchor="middle" class="m" style="font-size:12px" data-i18n="fr1b"></text><text x="95" y="110" text-anchor="middle" class="a" style="font-size:13px">f</text>
+    <line x1="182" y1="80" x2="292" y2="80" class="sa" stroke-width="2.5" marker-end="url(#f1)"/><text x="237" y="68" text-anchor="middle" class="a" style="font-size:12px">Rᵀ(f − t)</text>
+    <rect x="296" y="30" width="170" height="100" rx="12" class="fp sk" stroke-width="1.5"/>
+    <text x="381" y="62" text-anchor="middle" style="font-weight:600" data-i18n="fr2"></text><text x="381" y="88" text-anchor="middle" class="m" style="font-size:12px" data-i18n="fr2b"></text><text x="381" y="110" text-anchor="middle" class="a" style="font-size:13px">pᴮ</text>
+    <line x1="468" y1="80" x2="610" y2="80" class="sa" stroke-width="2.5" marker-end="url(#f1)"/><text x="539" y="68" text-anchor="middle" class="a" style="font-size:12px">Rz(−αᵢ)(pᴮ − mᵢ)</text>
+    <rect x="614" y="30" width="150" height="100" rx="12" class="fp sk" stroke-width="1.5"/>
+    <text x="689" y="62" text-anchor="middle" style="font-weight:600" data-i18n="fr3"></text><text x="689" y="88" text-anchor="middle" class="m" style="font-size:12px" data-i18n="fr3b"></text><text x="689" y="110" text-anchor="middle" class="a" style="font-size:13px">pᴸ</text>
+    <line x1="766" y1="80" x2="804" y2="80" class="sa" stroke-width="2.5" marker-end="url(#f1)"/>
+    <rect x="808" y="30" width="84" height="100" rx="12" class="fas sa" stroke-width="1.5"/><text x="850" y="74" text-anchor="middle" style="font-weight:600">ik()</text><text x="850" y="98" text-anchor="middle" class="m" style="font-size:11px" data-i18n="fr4"></text>
+    <text x="10" y="160" class="m" style="font-size:12px" data-i18n="frNote"></text>
+  </svg>
+  <figcaption data-i18n="frCap"></figcaption></figure></div>
+<main>
+<section style="padding-top:0">
+  <p data-i18n="s1p2"></p>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s2step"></span><span data-i18n="s2h"></span></h2>
+  <div class="predict">
+    <p style="margin-top:0" data-i18n="predictQ"></p>
+    <button class="reveal" type="button" data-i18n="predictBtn"></button>
+    <div class="answer" hidden><p data-i18n="predictA"></p></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s3step"></span><span data-i18n="s3h"></span></h2>
+  <p data-i18n="s3p1"></p>
+  <div class="gallery side" style="grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr)">
+    <figure class="fig" style="margin:0">
+  <svg class="sv" viewBox="0 0 600 320" role="img" data-i18n-aria="geoAria"><circle cx="300" cy="160" r="130.2" fill="none" class="sl" stroke-width="1.5" stroke-dasharray="5 5"/><polygon points="324.6,117.4 349.2,160.0 324.6,202.6 275.4,202.6 250.8,160.0 275.4,117.4" class="fb sk" stroke-width="1.5"/><line x1="324.6" y1="117.4" x2="365.1" y2="47.2" class="sb" stroke-width="5" stroke-linecap="round"/><circle cx="324.6" cy="117.4" r="5" class="fk"/><circle cx="365.1" cy="47.2" r="6" class="fa"/><text x="374.0" y="35.8" text-anchor="start" style="font-size:12px">R1 <tspan class="a">α = -30°</tspan></text><line x1="349.2" y1="160.0" x2="430.2" y2="160.0" class="sb" stroke-width="5" stroke-linecap="round"/><circle cx="349.2" cy="160.0" r="5" class="fk"/><circle cx="430.2" cy="160.0" r="6" class="fa"/><text x="448.0" y="164.0" text-anchor="start" style="font-size:12px">R2 <tspan class="a">α = -90°</tspan></text><line x1="324.6" y1="202.6" x2="365.1" y2="272.8" class="sb" stroke-width="5" stroke-linecap="round"/><circle cx="324.6" cy="202.6" r="5" class="fk"/><circle cx="365.1" cy="272.8" r="6" class="fa"/><text x="374.0" y="292.2" text-anchor="start" style="font-size:12px">R3 <tspan class="a">α = -150°</tspan></text><line x1="275.4" y1="117.4" x2="234.9" y2="47.2" class="sb" stroke-width="5" stroke-linecap="round"/><circle cx="275.4" cy="117.4" r="5" class="fk"/><circle cx="234.9" cy="47.2" r="6" class="fa"/><text x="226.0" y="35.8" text-anchor="end" style="font-size:12px">L1 <tspan class="a">α = +30°</tspan></text><line x1="250.8" y1="160.0" x2="169.8" y2="160.0" class="sb" stroke-width="5" stroke-linecap="round"/><circle cx="250.8" cy="160.0" r="5" class="fk"/><circle cx="169.8" cy="160.0" r="6" class="fa"/><text x="152.0" y="164.0" text-anchor="end" style="font-size:12px">L2 <tspan class="a">α = +90°</tspan></text><line x1="275.4" y1="202.6" x2="234.9" y2="272.8" class="sb" stroke-width="5" stroke-linecap="round"/><circle cx="275.4" cy="202.6" r="5" class="fk"/><circle cx="234.9" cy="272.8" r="6" class="fa"/><text x="226.0" y="292.2" text-anchor="end" style="font-size:12px">L3 <tspan class="a">α = +150°</tspan></text><line x1="300" y1="160" x2="300" y2="130" class="sk" stroke-width="2"/><text x="305" y="138" style="font-size:12px">x</text><line x1="300" y1="160" x2="270" y2="160" class="sk" stroke-width="2"/><text x="272" y="154" style="font-size:12px">y</text><line x1="300" y1="160" x2="324.6" y2="117.4" class="sm" stroke-width="1" stroke-dasharray="3 3"/><text x="316.3" y="152.7" class="m" style="font-size:11px">98.4</text><text x="440" y="310" class="m" style="font-size:11px" data-i18n="geoCircle"></text></svg>
+  <figcaption data-i18n="geoCap"></figcaption></figure>
+    <figure class="fig plate"><img src="../media/rk/calibration_2.jpg" loading="lazy" data-i18n-alt="topRender" alt="">
+  <figcaption><span data-i18n="topRender"></span> <span class="credit" data-i18n="credRk"></span></figcaption></figure>
+  </div>
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="s3w"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s4step"></span><span data-i18n="s4h"></span></h2>
+  <p data-i18n="s4p1"></p>
+  <div class="eq">pᴸᵢ = Rz(−αᵢ) · ( Rᵀ · (fᵢ − t) − mᵢ )</div>
+  <div class="trap"><span class="t" data-i18n="trapT"></span><span data-i18n="s4trap"></span></div>
+  <p data-i18n="s4p2"></p>
+  <div class="eq">R = Rz(yaw) · Ry(pitch) · Rx(roll)</div>
+  <div class="trap"><span class="t" data-i18n="trapT"></span><span data-i18n="s4trap2"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s5step"></span><span data-i18n="s5h"></span></h2>
+  <p data-i18n="s5p1"></p>
+</section>
+</main>
+<div class="wide card widget">
+  <canvas id="pose" width="720" height="560" data-i18n-aria="poseAria"></canvas>
+  <div class="readout">
+    <div class="hint" data-i18n="poseHint"></div>
+    <div class="ctl"><label>x</label><input type="range" id="px" min="-50" max="50" step="0.5" value="0"><output></output></div><div class="ctl"><label>y</label><input type="range" id="py" min="-50" max="50" step="0.5" value="0"><output></output></div><div class="ctl"><label>z</label><input type="range" id="pz" min="-40" max="50" step="0.5" value="0"><output></output></div>
+    <div class="ctl"><label>roll</label><input type="range" id="pr" min="-25" max="25" step="0.5" value="0"><output></output></div><div class="ctl"><label>pitch</label><input type="range" id="pp" min="-25" max="25" step="0.5" value="0"><output></output></div><div class="ctl"><label>yaw</label><input type="range" id="pw" min="-35" max="35" step="0.5" value="0"><output></output></div>
+    <div class="seg"><button type="button" id="reset" data-i18n="bReset"></button><button type="button" class="toggle" id="wave" aria-pressed="false" data-i18n="bWave"></button></div>
+    <dl class="kv" id="pkv"></dl>
+  </div>
+</div>
+<main>
+<section style="padding-top:0">
+  <p data-i18n="s5p2"></p>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s6step"></span><span data-i18n="s6h"></span></h2>
+  <p data-i18n="s6p1"></p>
+  <figure class="fig tall"><img src="../media/ours/roll_pitch.jpg" loading="lazy" data-i18n-alt="rpCap" alt="">
+  <figcaption><span data-i18n="rpCap"></span> <span class="credit" data-i18n="credOurs"></span></figcaption></figure>
+  <p data-i18n="s6p2"></p>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s7step"></span><span data-i18n="s7h"></span></h2>
+  <p data-i18n="s7p1"></p>
+  <div class="eq">θ̇ᵢ = Jᵢ⁻¹ · Rz(−αᵢ) · ṗᴮᵢ &nbsp;&nbsp;&nbsp; ṗᴮ = −v − ω × pᴮ</div>
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="s7w"></span></div>
+  <div class="gallery g2">
+    <figure class="fig "><video class="clip" data-src="../media/ours/wave_dance.mp4" poster="../media/ours/wave_dance.jpg"></video>
+  <figcaption><span data-i18n="waveCap"></span> <span class="credit" data-i18n="credOurs"></span></figcaption></figure>
+    <figure class="fig "><video class="clip" data-src="../media/ours/wave_front.mp4" poster="../media/ours/wave_front.jpg"></video>
+  <figcaption><span data-i18n="waveCap2"></span> <span class="credit" data-i18n="credOurs"></span></figcaption></figure>
+  </div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="prstep"></span><span data-i18n="prh"></span></h2>
+  <p data-i18n="prp1"></p>
+  <ol class="ladder">
+    <li><span class="no-">1</span><span data-i18n="cp1"></span></li>
+    <li><span class="no-">2</span><span data-i18n="cp2"></span></li>
+    <li><span class="no-">3</span><span data-i18n="cp3"></span></li>
+    <li><span class="no-">4</span><span data-i18n="cp4"></span></li>
+    <li class="reward"><span class="no-">★</span><span data-i18n="cpR1"></span></li>
+    <li class="reward"><span class="no-">🤖</span><span data-i18n="cpR2"></span></li>
+  </ol>
+  <div class="cta"><span class="btn off" data-i18n="nbSoon"></span> <a href="../stage3/index.html" data-i18n="seeS3"></a></div>
+  <p class="cap" data-i18n="nbSoonNote"></p>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="fromBuild"></span><span data-i18n="bgh"></span></h2>
+  <p data-i18n="bgp1"></p>
+  
+  <div class="log">
+    <div class="card"><span class="tag" data-i18n="bug1t"></span><span data-i18n="bug1"></span></div>
+    <div class="card"><span class="tag" data-i18n="bug2t"></span><span data-i18n="bug2"></span></div>
+    <div class="card"><span class="tag" data-i18n="bug3t"></span><span data-i18n="bug3"></span></div>
+  </div>
+</section>
+</main>
+<nav class="pager" id="pager"></nav>
+<div class="sitefoot" id="sitefoot"></div>
+</div>
+<script src="../hexview.js"></script>
+<script src="i18n.js"></script>
+<script src="../assets/core.js"></script>
+<script src="page.js"></script>
+</body>
+</html>

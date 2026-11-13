@@ -1,46 +1,9 @@
 (() => {
   const $ = id => document.getElementById(id);
   const D2R = Math.PI / 180, L1 = 62, L2 = 76, L3 = 132;
-  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-  const col = () => ({ ink: css('--ink'), muted: css('--muted'), grid: css('--grid'), line: css('--line'), accent: css('--accent'), blue: css('--blue'), blueSoft: css('--blue-soft'), good: css('--good'), bad: css('--bad'), body: css('--body'), paper: css('--paper'), accentSoft: css('--accent-soft') });
-  let C = col();
+  const C = Site.C, t = Site.t, { dragOn, grid, seg, dot, label, cross } = Site.cv, kv = Site.kv, pill = Site.pill;
 
-  /* ---------- language ---------- */
-  let lang = 'en';
-  try { const q = new URLSearchParams(location.search).get('lang'); const s = localStorage.getItem('hexpod-lang'); lang = (q && I18N[q]) ? q : (s && I18N[s]) ? s : 'en'; } catch (e) { }
-  const sel = $('lang');
-  Object.keys(I18N).forEach(k => { const o = document.createElement('option'); o.value = k; o.textContent = LANG_NAMES[k] || k; sel.appendChild(o); });
-  const t = k => (I18N[lang] && I18N[lang][k] != null) ? I18N[lang][k] : (I18N.en[k] ?? k);
-  function applyLang() {
-    sel.value = lang; document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang;
-    document.querySelectorAll('[data-i18n]').forEach(el => { el.innerHTML = t(el.dataset.i18n); });
-    $('nbLink').href = 'notebook/index.html?lang=' + lang;
-    drawTop(); drawSide();
-  }
-  sel.addEventListener('change', () => { lang = sel.value; try { localStorage.setItem('hexpod-lang', lang); } catch (e) { } applyLang(); });
-
-  $('reveal').addEventListener('click', () => { $('answer').hidden = false; $('reveal').hidden = true; });
-
-  /* ---------- canvas helpers ---------- */
-  function pointer(cv, e) { const b = cv.getBoundingClientRect(); return [(e.clientX - b.left) * cv.width / b.width, (e.clientY - b.top) * cv.height / b.height]; }
-  function dragOn(cv, fn) {
-    let d = false;
-    cv.addEventListener('pointerdown', e => { d = true; cv.setPointerCapture(e.pointerId); fn(pointer(cv, e)); });
-    cv.addEventListener('pointermove', e => { if (d) fn(pointer(cv, e)); });
-    cv.addEventListener('pointerup', () => d = false); cv.addEventListener('pointercancel', () => d = false);
-  }
-  function grid(ctx, W, H, ox, oy, s, step) {
-    ctx.strokeStyle = C.grid; ctx.lineWidth = 1;
-    for (let x = ox % (step * s); x < W; x += step * s) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
-    for (let y = oy % (step * s); y < H; y += step * s) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
-  }
-  function seg(ctx, a, b, color, w, dash) { ctx.strokeStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.setLineDash(dash || []); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); ctx.setLineDash([]); }
-  function dot(ctx, p, r, color) { ctx.fillStyle = color; ctx.beginPath(); ctx.arc(p[0], p[1], r, 0, 7); ctx.fill(); }
-  function label(ctx, txt, p, color, size) { ctx.fillStyle = color || C.ink; ctx.font = `${size || 15}px "JetBrains Mono", monospace`; ctx.fillText(txt, p[0], p[1]); }
-  function cross(ctx, p, color) { ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(p[0], p[1], 10, 0, 7); ctx.moveTo(p[0] - 16, p[1]); ctx.lineTo(p[0] + 16, p[1]); ctx.moveTo(p[0], p[1] - 16); ctx.lineTo(p[0], p[1] + 16); ctx.stroke(); }
   const f1 = v => v.toFixed(1);
-  const kv = (el, rows) => { el.innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join(''); };
-  const pill = (ok, txt) => `<span class="pill ${ok ? 'ok' : 'no'}">${txt}</span>`;
 
   /* ---------- top view (θ1) ---------- */
   const tv = $('top'), tc = tv.getContext('2d'), TS = 1.55, TO = [150, 270];
@@ -112,22 +75,85 @@
 
   /* ---------- hero: dancing hexapod ---------- */
   const hv = $('hero'), hc = hv.getContext('2d');
-  let az = -0.75, spin = true, t0 = performance.now(), lastX = null;
+  let az = -0.75, spin = true, t0 = performance.now(), lastX = null, heroOn = true;
   hv.addEventListener('pointerdown', e => { lastX = e.clientX; spin = false; hv.setPointerCapture(e.pointerId); });
   hv.addEventListener('pointermove', e => { if (lastX != null) { az += (e.clientX - lastX) * 0.01; lastX = e.clientX; } });
   hv.addEventListener('pointerup', () => { lastX = null; });
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduce = Site.reduceMotion;
+  new IntersectionObserver(es => es.forEach(e => { const was = heroOn; heroOn = e.isIntersecting; if (heroOn && !was) requestAnimationFrame(frame); })).observe(hv);
   function frame(now) {
     const tt = reduce ? 0 : (now - t0) / 1000;
     if (spin && !reduce) az = -0.75 + 0.12 * tt;
     const pose = HX.danceT(tt), ang = HX.bodyIK(pose);
     HX.draw(hc, hv.width, hv.height, { legs: [0, 1, 2, 3, 4, 5], pose, angles: ang, az, el: 0.5, scale: 1.25, body: true, cy: 0.6 }, C);
-    requestAnimationFrame(frame);
+    if (heroOn && !reduce) requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 
-  const recolor = () => { C = col(); drawTop(); drawSide(); };
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', recolor);
-  new MutationObserver(recolor).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-  applyLang();
+  /* ---------- flatten: 3D leg plane (left) and the 2D sheet (right) ---------- */
+  const pv = $('plane'), pc = pv.getContext('2d');
+  let pOn = false;
+  const pT0 = performance.now();
+  function drawPlane(now) {
+    const W = pv.width, H = pv.height, tt = Site.reduceMotion ? 1.3 : (now - pT0) / 1000;
+    pc.clearRect(0, 0, W, H);
+    const phi = 32 * Math.sin(tt * 0.7) * D2R, rr = 175 + 25 * Math.sin(tt * 1.1), zz = -80 + 30 * Math.sin(tt * 0.9 + 1);
+    const tgt3 = [rr * Math.cos(phi), rr * Math.sin(phi), zz], ang = HX.ik(...tgt3);
+    // left: oblique 3D view
+    const az = -1.05, el = 0.42, s = 1.25, cx = 170, cy = 250;
+    const P = p => { const xr = p[0] * Math.cos(az) - p[1] * Math.sin(az), yr = p[0] * Math.sin(az) + p[1] * Math.cos(az); return [cx + s * xr, cy - s * (p[2] * Math.cos(el) + yr * Math.sin(el))]; };
+    const gz = -120;
+    pc.strokeStyle = C.grid; pc.lineWidth = 1;
+    for (let k = -120; k <= 280; k += 40) {
+      let a = P([k, -160, gz]), b = P([k, 160, gz]); pc.beginPath(); pc.moveTo(...a); pc.lineTo(...b); pc.stroke();
+      a = P([-120, k - 120, gz]); b = P([280, k - 120, gz]); pc.beginPath(); pc.moveTo(...a); pc.lineTo(...b); pc.stroke();
+    }
+    const dir = [Math.cos(phi), Math.sin(phi)], q = (d, z) => P([d * dir[0], d * dir[1], z]);
+    // the vertical sheet
+    const quad = [q(0, 70), q(260, 70), q(260, gz), q(0, gz)];
+    pc.fillStyle = C.blueSoft; pc.globalAlpha = 0.75; pc.beginPath(); quad.forEach((p, i) => i ? pc.lineTo(...p) : pc.moveTo(...p)); pc.closePath(); pc.fill(); pc.globalAlpha = 1;
+    pc.strokeStyle = C.blue; pc.lineWidth = 1.2; pc.stroke();
+    label(pc, t('pl_sheet'), [quad[1][0] - 8, quad[1][1] + 20], C.blue, 14, 'right');
+    // x axis and θ1 arc at coxa height
+    seg(pc, P([0, 0, 0]), P([240, 0, 0]), C.muted, 1, [4, 4]); label(pc, 'x', P([250, 0, 0]), C.muted, 13);
+    pc.strokeStyle = C.accent; pc.lineWidth = 2.5; pc.beginPath();
+    for (let k = 0; k <= 20; k++) { const a = phi * k / 20, p = P([60 * Math.cos(a), 60 * Math.sin(a), 0]); k ? pc.lineTo(...p) : pc.moveTo(...p); }
+    pc.stroke();
+    label(pc, 'θ1', P([82 * Math.cos(phi / 2), 82 * Math.sin(phi / 2), 0]), C.accent, 16);
+    // target, its drop line and the leg
+    const T = P(tgt3), Tg = P([tgt3[0], tgt3[1], 0]);
+    seg(pc, Tg, T, C.muted, 1.2, [3, 4]); seg(pc, P([0, 0, 0]), Tg, C.muted, 1.2, [3, 4]);
+    const rl = P([rr * 0.6 * dir[0], rr * 0.6 * dir[1], 0]);
+    label(pc, 'r', [rl[0], rl[1] - 8], C.muted, 15);
+    if (ang) {
+      const pts = HX.legPts(ang).map(P);
+      [[0, 1, 6, C.muted], [1, 2, 8, C.blue], [2, 3, 6, C.ink]].forEach(([a, b, w, c]) => seg(pc, pts[a], pts[b], c, w));
+      pts.slice(0, 3).forEach(p => dot(pc, p, 4.5, C.ink));
+    }
+    cross(pc, T, C.ink);
+    seg(pc, P([0, 0, -30]), P([0, 0, 50]), C.ink, 2, [2, 3]);
+    label(pc, 'coxa', [P([0, 0, 50])[0] - 18, P([0, 0, 50])[1] - 8], C.muted, 13);
+    // right: the sheet, drawn flat
+    const ox = 660, oy = 190, s2 = 1.3;
+    pc.fillStyle = C.blueSoft; pc.fillRect(ox - 100, 24, 450, 410); pc.strokeStyle = C.blue; pc.lineWidth = 1.2; pc.strokeRect(ox - 100, 24, 450, 410);
+    const Q = (u, z) => [ox + u * s2, oy - z * s2];
+    seg(pc, Q(-62, 0), Q(250, 0), C.muted, 1, [4, 4]);
+    const u = rr - L1;
+    if (ang) {
+      const r2 = HX.legPts(ang).map(p => [Math.hypot(p[0], p[1]) - L1, p[2]]);
+      seg(pc, Q(-62, 0), Q(0, 0), C.muted, 6); seg(pc, Q(0, 0), Q(...r2[2]), C.blue, 8); seg(pc, Q(...r2[2]), Q(...r2[3]), C.ink, 6);
+      dot(pc, Q(0, 0), 5, C.ink); dot(pc, Q(...r2[2]), 5, C.ink); dot(pc, Q(-62, 0), 5, C.muted);
+    }
+    cross(pc, Q(u, zz), C.ink);
+    seg(pc, Q(0, zz - 24), Q(u, zz - 24), C.accent, 2.5); label(pc, `u = ${u.toFixed(0)}`, Q(u / 2, zz - 44), C.accent, 15, 'center');
+    seg(pc, Q(u + 20, 0), Q(u + 20, zz), C.good, 2.5); label(pc, `z = ${zz.toFixed(0)}`, Q(u + 28, zz / 2), C.good, 15);
+    label(pc, t('pl_femur'), Q(-70, -22), C.muted, 13);
+    label(pc, t('pl_title'), [ox - 88, 48], C.blue, 14);
+    if (pOn && !Site.reduceMotion) requestAnimationFrame(drawPlane);
+  }
+  new IntersectionObserver(es => es.forEach(e => { const was = pOn; pOn = e.isIntersecting; if (pOn && !was) requestAnimationFrame(drawPlane); })).observe(pv);
+
+  const redraw = () => { drawTop(); drawSide(); if (!pOn || Site.reduceMotion) drawPlane(performance.now()); };
+  Site.onLang(redraw); Site.onTheme(redraw);
+  redraw();
 })();

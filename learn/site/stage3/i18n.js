@@ -1,9 +1,27 @@
-/* All page text lives here. To add a language: copy the `en` block, change the key (e.g. "es"),
-   translate the values, and add its display name to LANG_NAMES. Nothing else needs to change. */
-const LANG_NAMES = { en: 'English', zh: '中文' };
-const I18N = {
+/* Stage 3 page text. Shared words (nav, buttons, credits) live in ../assets/core.js.
+   To add a language: copy the `en` block, change the key, translate the values. */
+const PAGE_I18N = {
 en: {
-  langLabel: 'Language',
+  title: 'Stage 3 · Inverse Kinematics — HexPod Academy',
+  atanAria: 'atan versus atan2 on two opposite points',
+  atanL1: 'Both points have y / x = 1.',
+  atanL2: 'atan(1) = 45° for both. Wrong for (−1, −1).',
+  atanL3: 'atan2 reads the signs of y and x separately,',
+  atanL4: 'so it knows which quadrant the point is in.',
+  atanCap: 'Why atan2: plain atan only sees the ratio y/x, so it confuses points on opposite sides of the origin.',
+  planeAria: 'animation: the vertical leg plane turns with θ1, and the problem becomes a 2D picture',
+  planeCap: '<b>Left:</b> as the target moves, the coxa turns the whole vertical “sheet of paper” (shaded) to face it. <b>Right:</b> what’s drawn on that sheet. Only two numbers survive: u (out from the femur joint) and z (height). The 3D problem is now 2D.',
+  kneeAria: 'θ3 measured from the femur line versus the interior knee angle',
+  kneeInt: 'interior 75°',
+  kneeL1: 'θ3: bend away from the femur’s line.',
+  kneeL2: 'Interior angle: between femur and tibia.',
+  kneeL3: 'They add up to 180°. At the standing',
+  kneeL4: 'pose: 105° + 75° = 180°.',
+  kneeL5: 'Same knee, two different numbers.',
+  kneeTrap: 'The law of cosines naturally gives you the angle <em>inside</em> the triangle at the knee. Our θ3 is the other one. We wrote the formula above so it gives θ3 directly (that’s why there is a minus sign hidden in it). The original Macaroon firmware uses the interior angle for its tibia servo, so if you borrow numbers from it, convert first.',
+  pl_sheet: 'leg plane', pl_femur: 'femur joint = origin', pl_title: 'the sheet, seen flat (u, z)',
+  realLeg: 'Our first assembled leg on the bench, driven from Python, one servo per joint.',
+  realDance: 'Later (Stage 5), the same ik() runs on all six legs at once, here on the real robot.',
   crumb: 'Stage 3 of 9 · Inverse Kinematics (IK)',
   eyebrow: 'Stage 3 · Inverse Kinematics',
   h1: 'Point anywhere.<br>The leg goes there.',
@@ -24,7 +42,6 @@ en: {
   s2step: 'Before we start · Predict',
   s2h: 'How far can one leg reach?',
   predictQ: 'Our leg has a femur of <b>76 mm</b> and a tibia of <b>132 mm</b>. Measured from the femur joint (the "hip"), what is the <b>farthest</b> the foot can be? And the <b>closest</b>? Guess before you click.',
-  predictBtn: 'Show the answer',
   predictA: '<b>Farthest: 76 + 132 = 208 mm</b>, when the knee is perfectly straight. <b>Closest: 132 − 76 = 56 mm</b>, when the knee folds all the way. So the foot lives inside a ring (a "donut") between 56 mm and 208 mm from the hip. Any target outside that ring has no solution, no matter how clever the math. Keep this ring in mind; you\'ll see it in the widget below.',
 
   s3step: 'Step 1 · Top view',
@@ -32,7 +49,6 @@ en: {
   s3p1: 'Look at the leg from above. The first joint, the <b>coxa</b>, only swings the leg left and right, like turning your whole body to face something before you reach for it. The other two joints then work in a vertical plane that points straight at the target. So the first job is easy: aim the leg.',
   topHint: 'Drag the target around. The shaded wedge is the coxa\'s legal range (±45°).',
   s3p2: 'The angle you need is just the direction from the coxa joint to the target, measured from the leg\'s "straight out" x-axis. Use <code>atan2(y, x)</code>, not <code>atan(y / x)</code>. Plain <code>atan</code> only sees the ratio y/x, so it can\'t tell (1, 1) from (−1, −1); <code>atan2</code> looks at the signs of both numbers and always gets the quadrant right (and doesn\'t crash when x = 0).',
-  workedT: 'Worked example',
   s3w: 'Target (162, 0, −89.5), which is the robot\'s standing pose: θ1 = atan2(0, 162) = <b>0°</b>, straight out.<br>Target (100, 100, −89.5): θ1 = atan2(100, 100) = <b>45°</b>, right on the edge of the legal range.',
 
   s4step: 'Step 2 · Flatten',
@@ -85,14 +101,31 @@ en: {
   bug3t: 'Square looked wobbly',
   bug3: 'On paper the 40 mm square came out slightly rounded, mostly on one side. The math was fine; the tibia servo had some play (backlash). IK can only be as accurate as the hardware and the calibration from Stage 2.',
 
-  prev: '← Stage 2 · Calibration',
-  next: 'Stage 4 · Jacobian & forces →',
   // widget labels
   w_target: 'target', w_legal: 'legal', w_out: 'out of range', w_reach: 'reachable', w_noreach: 'can\'t reach',
   w_limit: 'joint limit', w_ok: 'all joints within limits',
 },
 zh: {
-  langLabel: '语言',
+  title: '阶段 3 · 逆运动学 — HexPod Academy',
+  atanAria: 'atan 与 atan2 在两个相反点上的对比',
+  atanL1: '两个点的 y / x 都等于 1。',
+  atanL2: 'atan(1) 对两个点都给 45°，(−1, −1) 就错了。',
+  atanL3: 'atan2 分别看 y 和 x 的正负号，',
+  atanL4: '所以知道点在哪个象限。',
+  atanCap: '为什么用 atan2：atan 只看比值 y/x，会把原点两侧相反的点当成同一个方向。',
+  planeAria: '动画：竖直的腿平面随 θ1 转动，问题变成一张 2D 图',
+  planeCap: '<b>左：</b>目标移动时，coxa 把整张竖直的“纸”（阴影）转过去对准它。<b>右：</b>纸上画的内容。只剩两个数：u（从 femur 关节往外多远）和 z（高度）。3D 问题就变成了 2D。',
+  kneeAria: '从 femur 延长线量的 θ3 与膝盖内角的对比',
+  kneeInt: '内角 75°',
+  kneeL1: 'θ3：tibia 偏离 femur 延长线多少。',
+  kneeL2: '内角：femur 和 tibia 之间的夹角。',
+  kneeL3: '两者加起来是 180°。站立姿态：',
+  kneeL4: '105° + 75° = 180°。',
+  kneeL5: '同一个膝盖，两个不同的数。',
+  kneeTrap: '余弦定理直接给出的是三角形在膝盖处的<em>内角</em>，而我们的 θ3 是另一个角。上面的公式已经写成直接求 θ3 的形式（式子里藏了一个负号）。Macaroon 原固件的 tibia 舵机用的是内角，借用它的数字之前要先换算。',
+  pl_sheet: '腿平面', pl_femur: 'femur 关节 = 原点', pl_title: '把这张纸摊平来看 (u, z)',
+  realLeg: '我们第一条装好的腿，在桌上由 Python 控制，每个关节一个舵机。',
+  realDance: '后来（阶段 5），同一个 ik() 同时跑在六条腿上，这是实机。',
   crumb: '阶段 3 / 9 · 逆运动学 (IK)',
   eyebrow: '阶段 3 · 逆运动学',
   h1: '指哪，<br>腿就去哪。',
@@ -113,7 +146,6 @@ zh: {
   s2step: '开始之前 · 先猜一猜',
   s2h: '一条腿最远能伸多远？',
   predictQ: '这条腿的 femur（大腿）长 <b>76 mm</b>，tibia（小腿）长 <b>132 mm</b>。从 femur 关节（“髋”）量起，脚尖<b>最远</b>能到多远？<b>最近</b>呢？先猜，再点按钮。',
-  predictBtn: '看答案',
   predictA: '<b>最远：76 + 132 = 208 mm</b>，膝盖完全伸直时。<b>最近：132 − 76 = 56 mm</b>，膝盖折到底时。所以脚尖只能待在离髋 56 mm 到 208 mm 之间的一个环（“甜甜圈”）里。环外的目标无论怎么算都无解。记住这个环，下面的交互图里会看到它。',
 
   s3step: '第 1 步 · 俯视图',
@@ -121,7 +153,6 @@ zh: {
   s3p1: '从上往下看这条腿。第一个关节 <b>coxa</b> 只负责让腿左右摆，就像你伸手拿东西之前先把身体转过去对着它。转好之后，另外两个关节都在一个竖直平面里工作，这个平面正对着目标。所以第一件事很简单：把腿对准。',
   topHint: '拖动目标点。阴影扇形是 coxa 允许的范围（±45°）。',
   s3p2: '需要的角度就是从 coxa 关节指向目标的方向，从腿“正前方”的 x 轴量起。要用 <code>atan2(y, x)</code>，不要用 <code>atan(y / x)</code>。<code>atan</code> 只看比值 y/x，分不清 (1, 1) 和 (−1, −1)；<code>atan2</code> 同时看两个数的正负号，永远能判断对象限（x = 0 时也不会除以零）。',
-  workedT: '算一个例子',
   s3w: '目标 (162, 0, −89.5)，也就是机器人站立时的脚位：θ1 = atan2(0, 162) = <b>0°</b>，正前方。<br>目标 (100, 100, −89.5)：θ1 = atan2(100, 100) = <b>45°</b>，刚好在允许范围的边上。',
 
   s4step: '第 2 步 · 压平',
@@ -174,8 +205,6 @@ zh: {
   bug3t: '方形有点歪',
   bug3: '纸上画出来的 40 mm 方形有点圆，主要偏在一边。数学没错，是 tibia 舵机有空程（backlash）。IK 的精度不会超过硬件和阶段 2 标定的精度。',
 
-  prev: '← 阶段 2 · 标定',
-  next: '阶段 4 · Jacobian 与静力学 →',
   w_target: '目标', w_legal: '允许', w_out: '超出范围', w_reach: '可达', w_noreach: '够不着',
   w_limit: '超出关节限位', w_ok: '所有关节都在限位内',
 }};

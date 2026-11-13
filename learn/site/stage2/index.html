@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stage 2 · Calibration — HexPod Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-root="../" data-page="s2">
+<div class="bar"><div class="in gutter"></div></div>
+
+<div class="gutter">
+<div class="wrap"><nav class="strip" id="strip" aria-label="stages"></nav></div>
+<header class="hero">
+  <div>
+    <div class="eyebrow" data-i18n="eyebrow"></div>
+    <h1 data-i18n="h1"></h1>
+    <p class="sub" data-i18n="sub"></p>
+    <div class="mission"><span style="font-size:22px">🎯</span><div data-i18n="mission"></div></div>
+    <div class="meta"><span data-i18n="metaTime"></span><span data-i18n="metaPre"></span><span data-i18n="metaTools"></span></div>
+  </div>
+  <div class="stage-canvas">
+    <figure class="fig plate"><img src="../media/rk/calibration_1.jpg" loading="lazy" data-i18n-alt="heroCap" alt="">
+  <figcaption><span data-i18n="heroCap"></span> <span class="credit" data-i18n="credRk"></span></figcaption></figure>
+  </div>
+</header>
+<main>
+<section>
+  <h2><span class="step" data-i18n="s1step"></span><span data-i18n="s1h"></span></h2>
+  <p data-i18n="s1p1"></p>
+  <div class="eq">µs = µs₀ + s · θ / 0.0901</div>
+  <figure class="fig">
+  <svg class="sv" viewBox="0 0 640 240" role="img" data-i18n-aria="errAria">
+    <text x="16" y="20" class="m" style="font-size:12px" data-i18n="errAxes"></text>
+    <g transform="translate(40,30)"><rect x="0" y="0" width="150" height="150" class="fp sl" stroke-width="1"/><line x1="0" y1="150" x2="150" y2="0" class="sm" stroke-width="2" stroke-dasharray="5 4"/><line x1="0" y1="120" x2="120" y2="0" class="sa" stroke-width="3"/><text x="75" y="178" text-anchor="middle" style="font-weight:600" data-i18n="eOff"></text><text x="75" y="198" text-anchor="middle" class="a" style="font-size:12px" data-i18n="eOffF"></text></g><g transform="translate(245,30)"><rect x="0" y="0" width="150" height="150" class="fp sl" stroke-width="1"/><line x1="0" y1="150" x2="150" y2="0" class="sm" stroke-width="2" stroke-dasharray="5 4"/><line x1="0" y1="0" x2="150" y2="150" class="sa" stroke-width="3"/><text x="75" y="178" text-anchor="middle" style="font-weight:600" data-i18n="eDir"></text><text x="75" y="198" text-anchor="middle" class="a" style="font-size:12px" data-i18n="eDirF"></text></g><g transform="translate(450,30)"><rect x="0" y="0" width="150" height="150" class="fp sl" stroke-width="1"/><line x1="0" y1="150" x2="150" y2="0" class="sm" stroke-width="2" stroke-dasharray="5 4"/><line x1="0" y1="150" x2="150" y2="40" class="sa" stroke-width="3"/><text x="75" y="178" text-anchor="middle" style="font-weight:600" data-i18n="eScale"></text><text x="75" y="198" text-anchor="middle" class="a" style="font-size:12px" data-i18n="eScaleF"></text></g>
+  </svg>
+  <figcaption data-i18n="errCap"></figcaption></figure>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s2step"></span><span data-i18n="s2h"></span></h2>
+  <div class="predict">
+    <p style="margin-top:0" data-i18n="predictQ"></p>
+    <button class="reveal" type="button" data-i18n="predictBtn"></button>
+    <div class="answer" hidden><p data-i18n="predictA"></p></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s3step"></span><span data-i18n="s3h"></span></h2>
+  <p data-i18n="s3p1"></p>
+</section>
+</main>
+<div class="wide card widget">
+  <canvas id="spline" width="720" height="540" data-i18n-aria="splAria"></canvas>
+  <div class="readout">
+    <div class="hint" data-i18n="splHint"></div>
+    <div class="ctl"><label>µs₀</label><input type="range" id="trim" min="1400" max="1600" step="1" value="1500"><output></output></div>
+    <dl class="kv" id="spkv"></dl>
+    <div id="spst"></div>
+    <div><button class="toggle" id="newServo" type="button" data-i18n="splNew"></button></div>
+  </div>
+</div>
+<main>
+<section style="padding-top:0">
+  <p data-i18n="s3p2"></p>
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="s3w"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s4step"></span><span data-i18n="s4h"></span></h2>
+  <p data-i18n="s4p1"></p>
+  <div class="two">
+    <figure class="fig plate"><img src="../media/rk/calibration_1.jpg" loading="lazy" data-i18n-alt="cal1" alt="">
+  <figcaption><span data-i18n="cal1"></span> <span class="credit" data-i18n="credRk"></span></figcaption></figure>
+    <figure class="fig plate"><img src="../media/rk/calibration_2.jpg" loading="lazy" data-i18n-alt="cal2" alt="">
+  <figcaption><span data-i18n="cal2"></span> <span class="credit" data-i18n="credRk"></span></figcaption></figure>
+  </div>
+  <div class="trap"><span class="t" data-i18n="trapT"></span><span data-i18n="s4trap"></span></div>
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="s4w"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s5step"></span><span data-i18n="s5h"></span></h2>
+  <p data-i18n="s5p1"></p>
+  <figure class="fig">
+  <svg class="sv" viewBox="0 0 640 250" role="img" data-i18n-aria="mirAria">
+    <defs><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fa"/></marker></defs>
+    <rect x="270" y="100" width="100" height="40" rx="8" class="fb sk" stroke-width="1.5"/>
+    <line x1="370" y1="120" x2="410" y2="120" class="sm" stroke-width="7" stroke-linecap="round"/>
+    <line x1="410" y1="120" x2="470" y2="85" class="sb" stroke-width="9" stroke-linecap="round"/>
+    <line x1="470" y1="85" x2="500" y2="205" class="sk" stroke-width="7" stroke-linecap="round"/>
+    <line x1="270" y1="120" x2="230" y2="120" class="sm" stroke-width="7" stroke-linecap="round"/>
+    <line x1="230" y1="120" x2="170" y2="85" class="sb" stroke-width="9" stroke-linecap="round"/>
+    <line x1="170" y1="85" x2="140" y2="205" class="sk" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="410" cy="120" r="6" class="fk"/><circle cx="230" cy="120" r="6" class="fk"/>
+    <path d="M 453.3 95 A 50 50 0 0 0 435 76.7" fill="none" class="sa" stroke-width="3" marker-end="url(#m1)"/>
+    <path d="M 186.7 95 A 50 50 0 0 0 180 120" fill="none" class="sa" stroke-width="3" marker-end="url(#m1)"/>
+    <text x="440" y="56" class="a" data-i18n="mirR"></text>
+    <text x="200" y="56" text-anchor="end" class="a" data-i18n="mirL"></text>
+    <text x="508" y="210" class="m" style="font-size:12px">R2</text><text x="112" y="210" class="m" style="font-size:12px">L2</text>
+    <text x="320" y="240" text-anchor="middle" class="m" style="font-size:12px" data-i18n="mirNote"></text>
+  </svg>
+  <figcaption data-i18n="mirCap"></figcaption></figure>
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="s5w"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s6step"></span><span data-i18n="s6h"></span></h2>
+  <p data-i18n="s6p1"></p>
+  <div class="tablewrap"><table class="data">
+    <tr><th data-i18n="oBoard"></th><th data-i18n="oAsked"></th><th data-i18n="oGot"></th><th data-i18n="oClock"></th></tr>
+    <tr><td data-i18n="oLeft"></td><td>1000 / 1500 / 2000 µs</td><td>967 / 1452 / 1939 µs</td><td>≈ 25.8 MHz</td></tr>
+    <tr><td data-i18n="oRight"></td><td>1000 / 1500 / 2000 µs</td><td>957 / 1442 / 1917 µs</td><td>≈ 26.0 MHz</td></tr>
+  </table></div>
+  <p data-i18n="s6p2"></p>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s7step"></span><span data-i18n="s7h"></span></h2>
+  <p data-i18n="s7p1"></p>
+  <div class="gallery side">
+    <figure class="fig plate"><img src="../media/rk/calibration_page.jpg" loading="lazy" data-i18n-alt="calPage" alt="">
+  <figcaption><span data-i18n="calPage"></span> <span class="credit" data-i18n="credRk"></span></figcaption></figure>
+    <figure class="fig "><video class="clip" data-src="../media/ours/stand_sway.mp4" poster="../media/ours/stand_sway.jpg"></video>
+  <figcaption><span data-i18n="standCap"></span> <span class="credit" data-i18n="credOurs"></span></figcaption></figure>
+  </div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="prstep"></span><span data-i18n="prh"></span></h2>
+  <p data-i18n="prp1"></p>
+  <ol class="ladder">
+    <li><span class="no-">1</span><span data-i18n="cp1"></span></li>
+    <li><span class="no-">2</span><span data-i18n="cp2"></span></li>
+    <li><span class="no-">3</span><span data-i18n="cp3"></span></li>
+    <li><span class="no-">4</span><span data-i18n="cp4"></span></li>
+    <li class="reward"><span class="no-">★</span><span data-i18n="cpR1"></span></li>
+    <li class="reward"><span class="no-">🤖</span><span data-i18n="cpR2"></span></li>
+  </ol>
+  <div class="cta"><span class="btn off" data-i18n="nbSoon"></span> <a href="../stage3/index.html" data-i18n="seeS3"></a></div>
+  <p class="cap" data-i18n="nbSoonNote"></p>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="fromBuild"></span><span data-i18n="bgh"></span></h2>
+  <p data-i18n="bgp1"></p>
+  
+  <div class="log">
+    <div class="card"><span class="tag" data-i18n="bug1t"></span><span data-i18n="bug1"></span></div>
+    <div class="card"><span class="tag" data-i18n="bug2t"></span><span data-i18n="bug2"></span></div>
+    <div class="card"><span class="tag" data-i18n="bug3t"></span><span data-i18n="bug3"></span></div>
+  </div>
+</section>
+</main>
+<nav class="pager" id="pager"></nav>
+<div class="sitefoot" id="sitefoot"></div>
+</div>
+<script src="../hexview.js"></script>
+<script src="i18n.js"></script>
+<script src="../assets/core.js"></script>
+<script src="page.js"></script>
+</body>
+</html>

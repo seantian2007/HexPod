@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stage 6 · Walking gaits — HexPod Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-root="../" data-page="s6">
+<div class="bar"><div class="in gutter"></div></div>
+
+<div class="gutter">
+<div class="wrap"><nav class="strip" id="strip" aria-label="stages"></nav></div>
+<header class="hero">
+  <div>
+    <div class="eyebrow" data-i18n="eyebrow"></div>
+    <h1 data-i18n="h1"></h1>
+    <p class="sub" data-i18n="sub"></p>
+    <div class="mission"><span style="font-size:22px">🎯</span><div data-i18n="mission"></div></div>
+    <div class="meta"><span data-i18n="metaTime"></span><span data-i18n="metaPre"></span><span data-i18n="metaTools"></span></div>
+  </div>
+  <div class="stage-canvas">
+    <figure class="fig "><video class="clip" data-src="../media/ours/teleop_walk.mp4" poster="../media/ours/teleop_walk.jpg"></video>
+  <figcaption><span data-i18n="heroCap"></span> <span class="credit" data-i18n="credOurs"></span></figcaption></figure>
+  </div>
+</header>
+<main>
+<section>
+  <h2><span class="step" data-i18n="s1step"></span><span data-i18n="s1h"></span></h2>
+  <p data-i18n="s1p1"></p>
+  <div class="gallery g2">
+    <figure class="fig plate"><img src="https://upload.wikimedia.org/wikipedia/commons/d/dd/Muybridge_race_horse_animated.gif" loading="lazy" data-ext alt="" data-i18n-alt="muyCap">
+  <figcaption><span data-i18n="muyCap"></span> <a class="credit" href="https://commons.wikimedia.org/wiki/File:Muybridge_race_horse_animated.gif" data-i18n="credPD"></a></figcaption></figure>
+    <figure class="fig "><video class="clip" data-src="../media/ours/walk_top.mp4" poster="../media/ours/walk_top.jpg"></video>
+  <figcaption><span data-i18n="walkTopCap"></span> <span class="credit" data-i18n="credOurs"></span></figcaption></figure>
+  </div>
+  <p data-i18n="s1p2"></p>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s2step"></span><span data-i18n="s2h"></span></h2>
+  <div class="predict">
+    <p style="margin-top:0" data-i18n="predictQ"></p>
+    <button class="reveal" type="button" data-i18n="predictBtn"></button>
+    <div class="answer" hidden><p data-i18n="predictA"></p></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s3step"></span><span data-i18n="s3h"></span></h2>
+  <p data-i18n="s3p1"></p>
+  <div class="eq">φᵢ = (t / T − δᵢ) mod 1<br>φᵢ &lt; β → stance, s = φᵢ / β<br>φᵢ ≥ β → swing, &nbsp;s = (φᵢ − β) / (1 − β)</div>
+</section>
+</main>
+<div class="wide card panel">
+  <canvas id="gait" width="1100" height="430" data-i18n-aria="gaitAria"></canvas>
+  <div class="pctl">
+    <div class="seg" id="gaitSeg"><button type="button" data-g="tripod" aria-pressed="true" data-i18n="bTripod"></button><button type="button" data-g="ripple" aria-pressed="false" data-i18n="bRipple"></button><button type="button" data-g="wave" aria-pressed="false" data-i18n="bWave"></button></div>
+    <div class="ctl" style="flex:1;min-width:220px"><label>t / T</label><input type="range" id="gt" min="0" max="2" step="0.005" value="0"><output></output></div>
+    <button type="button" class="toggle" id="gplay" aria-pressed="true" data-i18n="bPause"></button>
+  </div>
+  <div class="stats" id="gkv"></div>
+  <p class="cap" style="padding:0 16px 12px;margin:0" data-i18n="gaitNote"></p>
+</div>
+<main>
+<section style="padding-top:0">
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="s3w"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s4step"></span><span data-i18n="s4h"></span></h2>
+  <p data-i18n="s4p1"></p>
+  <div class="eq">c(s) = s − sin(2πs) / 2π<br>x(s) = x_lift + c(s) · (x_AEP − x_lift)<br>z(s) = z₀ + h · (1 − cos 2πs) / 2</div>
+</section>
+</main>
+<div class="wide"><figure class="fig">
+  <svg class="sv" viewBox="0 0 900 320" role="img" data-i18n-aria="loopAria"><defs><marker id="fl" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="fa"/></marker><marker id="fk" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="fk"/></marker></defs><line x1="20" y1="236" x2="450" y2="236" class="sm" stroke-width="1.5"/><line x1="24" y1="236" x2="16" y2="244" class="sl" stroke-width="1"/><line x1="42" y1="236" x2="34" y2="244" class="sl" stroke-width="1"/><line x1="60" y1="236" x2="52" y2="244" class="sl" stroke-width="1"/><line x1="78" y1="236" x2="70" y2="244" class="sl" stroke-width="1"/><line x1="96" y1="236" x2="88" y2="244" class="sl" stroke-width="1"/><line x1="114" y1="236" x2="106" y2="244" class="sl" stroke-width="1"/><line x1="132" y1="236" x2="124" y2="244" class="sl" stroke-width="1"/><line x1="150" y1="236" x2="142" y2="244" class="sl" stroke-width="1"/><line x1="168" y1="236" x2="160" y2="244" class="sl" stroke-width="1"/><line x1="186" y1="236" x2="178" y2="244" class="sl" stroke-width="1"/><line x1="204" y1="236" x2="196" y2="244" class="sl" stroke-width="1"/><line x1="222" y1="236" x2="214" y2="244" class="sl" stroke-width="1"/><line x1="240" y1="236" x2="232" y2="244" class="sl" stroke-width="1"/><line x1="258" y1="236" x2="250" y2="244" class="sl" stroke-width="1"/><line x1="276" y1="236" x2="268" y2="244" class="sl" stroke-width="1"/><line x1="294" y1="236" x2="286" y2="244" class="sl" stroke-width="1"/><line x1="312" y1="236" x2="304" y2="244" class="sl" stroke-width="1"/><line x1="330" y1="236" x2="322" y2="244" class="sl" stroke-width="1"/><line x1="348" y1="236" x2="340" y2="244" class="sl" stroke-width="1"/><line x1="366" y1="236" x2="358" y2="244" class="sl" stroke-width="1"/><line x1="384" y1="236" x2="376" y2="244" class="sl" stroke-width="1"/><line x1="402" y1="236" x2="394" y2="244" class="sl" stroke-width="1"/><line x1="420" y1="236" x2="412" y2="244" class="sl" stroke-width="1"/><line x1="438" y1="236" x2="430" y2="244" class="sl" stroke-width="1"/><line x1="390" y1="234" x2="86" y2="234" class="sb" stroke-width="4" marker-end="url(#fk)"/><polyline points="70.0,236.0 70.0,235.7 70.1,234.8 70.3,233.3 70.6,231.2 71.2,228.6 72.1,225.5 73.3,221.9 74.8,217.8 76.8,213.3 79.2,208.5 82.1,203.4 85.6,198.0 89.5,192.4 94.0,186.7 99.1,181.0 104.7,175.3 110.9,169.6 117.6,164.0 124.8,158.6 132.6,153.5 140.8,148.7 149.5,144.2 158.6,140.1 168.1,136.5 177.9,133.4 188.0,130.8 198.3,128.7 208.7,127.2 219.3,126.3 230.0,126.0 240.7,126.3 251.3,127.2 261.7,128.7 272.0,130.8 282.1,133.4 291.9,136.5 301.4,140.1 310.5,144.2 319.2,148.7 327.4,153.5 335.2,158.6 342.4,164.0 349.1,169.6 355.3,175.3 360.9,181.0 366.0,186.7 370.5,192.4 374.4,198.0 377.9,203.4 380.8,208.5 383.2,213.3 385.2,217.8 386.7,221.9 387.9,225.5 388.8,228.6 389.4,231.2 389.7,233.3 389.9,234.8 390.0,235.7 390.0,236.0" fill="none" class="sa" stroke-width="3.5" stroke-dasharray="0" marker-end="url(#fl)"/><circle cx="71.2" cy="228.6" r="3" class="fa"/><circle cx="79.2" cy="208.5" r="3" class="fa"/><circle cx="99.1" cy="181.0" r="3" class="fa"/><circle cx="132.6" cy="153.5" r="3" class="fa"/><circle cx="177.9" cy="133.4" r="3" class="fa"/><circle cx="230.0" cy="126.0" r="3" class="fa"/><circle cx="282.1" cy="133.4" r="3" class="fa"/><circle cx="327.4" cy="153.5" r="3" class="fa"/><circle cx="360.9" cy="181.0" r="3" class="fa"/><circle cx="380.8" cy="208.5" r="3" class="fa"/><circle cx="388.8" cy="228.6" r="3" class="fa"/><circle cx="70" cy="236" r="7" class="fk"/><circle cx="390" cy="236" r="7" class="fk"/><text x="66" y="264" text-anchor="middle" style="font-size:12px" data-i18n="lp_lift"></text><text x="394" y="264" text-anchor="middle" style="font-size:12px" data-i18n="lp_touch"></text><text x="230.0" y="222" text-anchor="middle" class="b" style="font-size:12px" data-i18n="lp_stance"></text><text x="230.0" y="114" text-anchor="middle" class="a" style="font-size:13px" data-i18n="lp_swing"></text><line x1="420" y1="236" x2="420" y2="126" class="sm" stroke-width="1" marker-start="url(#fk)" marker-end="url(#fk)"/><line x1="230.0" y1="126" x2="426" y2="126" class="sl" stroke-width="1" stroke-dasharray="3 3"/><text x="426" y="185.0" style="font-size:12px">h</text><line x1="70" y1="280" x2="390" y2="280" class="sm" stroke-width="1" marker-start="url(#fk)" marker-end="url(#fk)"/><text x="230.0" y="298" text-anchor="middle" class="m" style="font-size:12px">S = v · βT</text><line x1="40" y1="34" x2="140" y2="34" class="sk" stroke-width="2" marker-end="url(#fk)"/><text x="148" y="38" style="font-size:12px" data-i18n="lp_body"></text><text x="500" y="28" style="font-size:12.5px;font-weight:600" data-i18n="lp_title2"></text><line x1="500" y1="50" x2="528" y2="50" class="sa" stroke-width="3"/><text x="536" y="54" class="a" style="font-size:11.5px" data-i18n="lp_a"></text><line x1="500" y1="70" x2="528" y2="70" class="sg" stroke-width="2.5" stroke-dasharray="6 4"/><text x="536" y="74" class="g" style="font-size:11.5px" data-i18n="lp_b"></text><line x1="540" y1="272.0" x2="790" y2="272.0" class="sl" stroke-width="1"/><text x="532" y="276.0" text-anchor="end" class="m" style="font-size:11px">0</text><line x1="540" y1="230.0" x2="790" y2="230.0" class="sl" stroke-width="1"/><text x="532" y="234.0" text-anchor="end" class="m" style="font-size:11px">v</text><line x1="540" y1="188.0" x2="790" y2="188.0" class="sl" stroke-width="1"/><text x="532" y="192.0" text-anchor="end" class="m" style="font-size:11px">2v</text><line x1="540" y1="146.0" x2="790" y2="146.0" class="sl" stroke-width="1"/><text x="532" y="150.0" text-anchor="end" class="m" style="font-size:11px">3v</text><line x1="540" y1="104.0" x2="790" y2="104.0" class="sl" stroke-width="1"/><text x="532" y="108.0" text-anchor="end" class="m" style="font-size:11px">4v</text><line x1="540" y1="272" x2="540" y2="104" class="sm" stroke-width="1"/><text x="540" y="289" text-anchor="middle" class="m" style="font-size:11px">0</text><text x="790" y="289" text-anchor="middle" class="m" style="font-size:11px">1</text><text x="665.0" y="306" text-anchor="middle" class="m" style="font-size:11.5px" data-i18n="lp_s"></text><polyline points="540.0,272.0 544.2,271.5 548.3,270.2 552.5,267.9 556.7,264.7 560.8,260.7 565.0,256.0 569.2,250.4 573.3,244.2 577.5,237.4 581.7,230.0 585.8,222.2 590.0,214.0 594.2,205.5 598.3,196.8 602.5,188.0 606.7,179.2 610.8,170.5 615.0,162.0 619.2,153.8 623.3,146.0 627.5,138.6 631.7,131.8 635.8,125.6 640.0,120.0 644.2,115.3 648.3,111.3 652.5,108.1 656.7,105.8 660.8,104.5 665.0,104.0 669.2,104.5 673.3,105.8 677.5,108.1 681.7,111.3 685.8,115.3 690.0,120.0 694.2,125.6 698.3,131.8 702.5,138.6 706.7,146.0 710.8,153.8 715.0,162.0 719.2,170.5 723.3,179.2 727.5,188.0 731.7,196.8 735.8,205.5 740.0,214.0 744.2,222.2 748.3,230.0 752.5,237.4 756.7,244.2 760.8,250.4 765.0,256.0 769.2,260.7 773.3,264.7 777.5,267.9 781.7,270.2 785.8,271.5 790.0,272.0" fill="none" class="sg" stroke-width="2.5" stroke-dasharray="6 4"/><polyline points="540.0,230.0 544.2,229.8 548.3,229.1 552.5,227.9 556.7,226.4 560.8,224.4 565.0,222.0 569.2,219.2 573.3,216.1 577.5,212.7 581.7,209.0 585.8,205.1 590.0,201.0 594.2,196.7 598.3,192.4 602.5,188.0 606.7,183.6 610.8,179.3 615.0,175.0 619.2,170.9 623.3,167.0 627.5,163.3 631.7,159.9 635.8,156.8 640.0,154.0 644.2,151.6 648.3,149.6 652.5,148.1 656.7,146.9 660.8,146.2 665.0,146.0 669.2,146.2 673.3,146.9 677.5,148.1 681.7,149.6 685.8,151.6 690.0,154.0 694.2,156.8 698.3,159.9 702.5,163.3 706.7,167.0 710.8,170.9 715.0,175.0 719.2,179.3 723.3,183.6 727.5,188.0 731.7,192.4 735.8,196.7 740.0,201.0 744.2,205.1 748.3,209.0 752.5,212.7 756.7,216.1 760.8,219.2 765.0,222.0 769.2,224.4 773.3,226.4 777.5,227.9 781.7,229.1 785.8,229.8 790.0,230.0" fill="none" class="sa" stroke-width="3"/><line x1="540" y1="272.0" x2="540" y2="230.0" class="sr" stroke-width="2" stroke-dasharray="2 3"/><circle cx="540" cy="230.0" r="5" class="fr"/><line x1="790" y1="272.0" x2="790" y2="230.0" class="sr" stroke-width="2" stroke-dasharray="2 3"/><circle cx="790" cy="230.0" r="5" class="fr"/><text x="800" y="234.0" class="r" style="font-size:11.5px" data-i18n="lp_jump"></text></svg>
+  <figcaption data-i18n="loopCap"></figcaption></figure></div>
+<main>
+<section style="padding-top:0">
+  <div class="trap"><span class="t" data-i18n="trapT"></span><span data-i18n="s4trap"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s5step"></span><span data-i18n="s5h"></span></h2>
+  <p data-i18n="s5p1"></p>
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="s5w"></span></div>
+  <p data-i18n="s5p2"></p>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s6step"></span><span data-i18n="s6h"></span></h2>
+  <p data-i18n="s6p1"></p>
+  <div class="eq">ṗ = −(v + ω × p) &nbsp;&nbsp;&nbsp; ICR = (−v_y / ω, v_x / ω)</div>
+  <div class="gallery side" style="grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr)">
+    <figure class="fig" style="margin:0">
+  <svg class="sv" viewBox="0 0 470 420" role="img" data-i18n-aria="icrAria"><defs><marker id="ia" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fk"/></marker><marker id="ib" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fbl"/></marker></defs><polyline points="234.1,300.2 236.2,296.5 238.2,292.7 240.1,289.0 242.0,285.1 243.7,281.3 245.4,277.4 247.1,273.5 248.6,269.5 250.0,265.5 251.4,261.5 252.7,257.5 253.9,253.4 255.1,249.3 256.1,245.2 257.1,241.1 257.9,236.9 258.7,232.8 259.4,228.6 260.1,224.4 260.6,220.2 261.0,216.0 261.4,211.7 261.7,207.5 261.9,203.3 262.0,199.0 262.0,194.8 261.9,190.5 261.8,186.3 261.5,182.1 261.2,177.8 260.8,173.6 260.3,169.4 259.7,165.2 259.0,161.0 258.3,156.8 257.4,152.7 256.5,148.5 255.5,144.4 254.4,140.3 253.2,136.2 252.0,132.2 250.6,128.2 249.2,124.2 247.7,120.2 246.1,116.3 244.5,112.4 242.7,108.5 240.9,104.7 239.0,100.9 237.0,97.1 235.0,93.4 232.9,89.7 230.7,86.1 228.4,82.5 226.0,79.0 223.6,75.5 221.1,72.1 218.6,68.7 215.9,65.4 213.3,62.1" fill="none" class="sm" stroke-width="1.5" stroke-dasharray="6 5"/><line x1="53.7" y1="196.0" x2="327.1" y2="83.2" class="sl" stroke-width="1.2" stroke-dasharray="3 4"/><line x1="286.6" y1="153.4" x2="327.1" y2="83.2" stroke="#e65546" stroke-width="5" stroke-linecap="round" opacity=".85"/><line x1="53.7" y1="196.0" x2="392.2" y2="196.0" class="sl" stroke-width="1.2" stroke-dasharray="3 4"/><line x1="311.2" y1="196.0" x2="392.2" y2="196.0" stroke="#f09632" stroke-width="5" stroke-linecap="round" opacity=".85"/><line x1="53.7" y1="196.0" x2="327.1" y2="308.8" class="sl" stroke-width="1.2" stroke-dasharray="3 4"/><line x1="286.6" y1="238.6" x2="327.1" y2="308.8" stroke="#cdaa28" stroke-width="5" stroke-linecap="round" opacity=".85"/><line x1="53.7" y1="196.0" x2="196.9" y2="83.2" class="sl" stroke-width="1.2" stroke-dasharray="3 4"/><line x1="237.4" y1="153.4" x2="196.9" y2="83.2" stroke="#3c82dc" stroke-width="5" stroke-linecap="round" opacity=".85"/><line x1="212.8" y1="196.0" x2="131.8" y2="196.0" stroke="#3cafaa" stroke-width="5" stroke-linecap="round" opacity=".85"/><line x1="53.7" y1="196.0" x2="196.9" y2="308.8" class="sl" stroke-width="1.2" stroke-dasharray="3 4"/><line x1="237.4" y1="238.6" x2="196.9" y2="308.8" stroke="#8264d2" stroke-width="5" stroke-linecap="round" opacity=".85"/><polygon points="286.6,153.4 311.2,196.0 286.6,238.6 237.4,238.6 212.8,196.0 237.4,153.4" class="fb sk" stroke-width="1.5"/><line x1="327.1" y1="83.2" x2="348.7" y2="135.7" class="sk" stroke-width="2.4" marker-end="url(#ia)"/><circle cx="327.1" cy="83.2" r="7" fill="#e65546" class="sk" stroke-width="1.5"/><line x1="392.2" y1="196.0" x2="392.2" y2="261.0" class="sk" stroke-width="2.4" marker-end="url(#ia)"/><circle cx="392.2" cy="196.0" r="7" fill="#f09632" class="sk" stroke-width="1.5"/><line x1="327.1" y1="308.8" x2="305.5" y2="361.3" class="sk" stroke-width="2.4" marker-end="url(#ia)"/><circle cx="327.1" cy="308.8" r="7" fill="#cdaa28" class="sk" stroke-width="1.5"/><line x1="196.9" y1="83.2" x2="218.5" y2="110.7" class="sk" stroke-width="2.4" marker-end="url(#ia)"/><circle cx="196.9" cy="83.2" r="7" fill="#3c82dc" class="sk" stroke-width="1.5"/><line x1="131.8" y1="196.0" x2="131.8" y2="211.0" class="sk" stroke-width="2.4" marker-end="url(#ia)"/><circle cx="131.8" cy="196.0" r="7" fill="#3cafaa" class="sk" stroke-width="1.5"/><line x1="196.9" y1="308.8" x2="175.3" y2="336.3" class="sk" stroke-width="2.4" marker-end="url(#ia)"/><circle cx="196.9" cy="308.8" r="7" fill="#8264d2" class="sk" stroke-width="1.5"/><line x1="262" y1="196" x2="262" y2="134" class="sb" stroke-width="3.5" marker-end="url(#ib)"/><text x="271" y="150" class="b" style="font-weight:600;font-size:15px">v</text><polyline points="277.0,222.0 281.3,219.0 285.0,215.3 288.0,211.0 290.2,206.3 291.5,201.2 292.0,196.0 291.5,190.8 290.2,185.7 288.0,181.0 285.0,176.7 281.3,173.0 277.0,170.0 272.3,167.8 267.2,166.5 262.0,166.0 256.8,166.5 251.7,167.8 247.0,170.0 242.7,173.0 239.0,176.7 236.0,181.0 233.8,185.7 232.5,190.8 232.0,196.0" fill="none" class="sb" stroke-width="2" marker-end="url(#ib)"/><text x="286" y="230" class="b" style="font-size:15px">ω</text><line x1="53.7" y1="196.0" x2="213" y2="196" class="sr" stroke-width="1.5"/><line x1="44.7" y1="187.0" x2="62.7" y2="205.0" class="sr" stroke-width="3"/><line x1="44.7" y1="205.0" x2="62.7" y2="187.0" class="sr" stroke-width="3"/><text x="53.7" y="226.0" text-anchor="middle" class="r" style="font-weight:600;font-size:14px" data-i18n="ic_icr"></text><text x="12" y="42" class="r" style="font-size:12px" data-i18n="ic_R"></text><text x="12" y="22" class="m" style="font-size:12px" data-i18n="ic_note"></text><text x="262" y="64" text-anchor="middle" class="m" style="font-size:12px" data-i18n="ic_front"></text></svg>
+  <figcaption data-i18n="icrCap"></figcaption></figure>
+    <figure class="fig "><video class="clip" data-src="../media/ours/turn_top.mp4" poster="../media/ours/turn_top.jpg"></video>
+  <figcaption><span data-i18n="turnCap"></span> <span class="credit" data-i18n="credOurs"></span></figcaption></figure>
+  </div>
+  <p data-i18n="s6p2"></p>
+  <div class="eq">AEP = p₀ + (βT / 2) · (v + ω × p₀)</div>
+  <div class="trap"><span class="t" data-i18n="trapT"></span><span data-i18n="s6trap"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s7step"></span><span data-i18n="s7h"></span></h2>
+  <p data-i18n="s7p1"></p>
+</section>
+</main>
+<div class="wide card widget">
+  <canvas id="walk" width="720" height="540" tabindex="0" data-i18n-aria="walkAria"></canvas>
+  <div class="readout">
+    <div class="hint" data-i18n="walkHint"></div>
+    <div class="seg" id="walkSeg"><button type="button" data-g="tripod" aria-pressed="true" data-i18n="bTripod"></button><button type="button" data-g="ripple" aria-pressed="false" data-i18n="bRipple"></button><button type="button" data-g="wave" aria-pressed="false" data-i18n="bWave"></button><button type="button" id="wreset" data-i18n="bReset"></button></div>
+    <div class="padrow">
+      <canvas id="pad" width="300" height="300" data-i18n-aria="padAria"></canvas>
+      <div class="ctl" style="grid-template-columns:3.6em 1fr"><label data-i18n="turnLab"></label><input type="range" id="turn" min="-1" max="1" step="0.01" value="0"></div>
+    </div>
+    <div id="wst"></div>
+    <dl class="kv" id="wkv"></dl>
+  </div>
+</div>
+<main>
+<section style="padding-top:0">
+  <p data-i18n="s7p2"></p>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s8step"></span><span data-i18n="s8h"></span></h2>
+  <p data-i18n="s8p1"></p>
+</section>
+</main>
+<div class="wide"><figure class="fig">
+  <svg class="sv" viewBox="0 0 900 176" role="img" data-i18n-aria="pipeAria"><defs><marker id="pa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fa"/></marker></defs><rect x="10" y="34" width="152" height="92" rx="12" class="fp sk" stroke-width="1.5"/><text x="86.0" y="72" text-anchor="middle" style="font-weight:600" data-i18n="pp1"></text><text x="86.0" y="98" text-anchor="middle" class="m" style="font-size:12px" data-i18n="pp1b"></text><line x1="164" y1="80" x2="186" y2="80" class="sa" stroke-width="2.5" marker-end="url(#pa)"/><rect x="190" y="34" width="152" height="92" rx="12" class="fp sk" stroke-width="1.5"/><text x="266.0" y="72" text-anchor="middle" style="font-weight:600" data-i18n="pp2"></text><text x="266.0" y="98" text-anchor="middle" class="m" style="font-size:12px" data-i18n="pp2b"></text><line x1="344" y1="80" x2="366" y2="80" class="sa" stroke-width="2.5" marker-end="url(#pa)"/><rect x="370" y="34" width="152" height="92" rx="12" class="fp sk" stroke-width="1.5"/><text x="446.0" y="72" text-anchor="middle" style="font-weight:600" data-i18n="pp3"></text><text x="446.0" y="98" text-anchor="middle" class="m" style="font-size:12px" data-i18n="pp3b"></text><line x1="524" y1="80" x2="546" y2="80" class="sa" stroke-width="2.5" marker-end="url(#pa)"/><rect x="550" y="34" width="152" height="92" rx="12" class="fp sk" stroke-width="1.5"/><text x="626.0" y="72" text-anchor="middle" style="font-weight:600" data-i18n="pp4"></text><text x="626.0" y="98" text-anchor="middle" class="m" style="font-size:12px" data-i18n="pp4b"></text><line x1="704" y1="80" x2="726" y2="80" class="sa" stroke-width="2.5" marker-end="url(#pa)"/><rect x="730" y="34" width="152" height="92" rx="12" class="fas sa" stroke-width="1.5"/><text x="806.0" y="72" text-anchor="middle" style="font-weight:600" data-i18n="pp5"></text><text x="806.0" y="98" text-anchor="middle" class="m" style="font-size:12px" data-i18n="pp5b"></text><path d="M 446 128 C 446 156, 120 156, 86 130" fill="none" class="sr" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#pa)"/><text x="270" y="166" text-anchor="middle" class="r" style="font-size:11.5px" data-i18n="ppFail"></text></svg>
+  <figcaption data-i18n="pipeCap"></figcaption></figure></div>
+<main>
+<section style="padding-top:0">
+  <div class="robot"><span class="t" data-i18n="robotT"></span><span data-i18n="s8robot"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="prstep"></span><span data-i18n="prh"></span></h2>
+  <p data-i18n="prp1"></p>
+  <ol class="ladder">
+    <li><span class="no-">1</span><span data-i18n="cp1"></span></li>
+    <li><span class="no-">2</span><span data-i18n="cp2"></span></li>
+    <li><span class="no-">3</span><span data-i18n="cp3"></span></li>
+    <li><span class="no-">4</span><span data-i18n="cp4"></span></li>
+    <li class="reward"><span class="no-">★</span><span data-i18n="cpR1"></span></li>
+    <li class="reward"><span class="no-">🤖</span><span data-i18n="cpR2"></span></li>
+  </ol>
+  <div class="cta"><span class="btn off" data-i18n="nbSoon"></span> <a href="../stage3/index.html" data-i18n="seeS3"></a></div>
+  <p class="cap" data-i18n="nbSoonNote"></p>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="fromBuild"></span><span data-i18n="bgh"></span></h2>
+  <p data-i18n="bgp1"></p>
+  
+  <div class="log">
+    <div class="card"><span class="tag" data-i18n="bug1t"></span><span data-i18n="bug1"></span></div>
+    <div class="card"><span class="tag" data-i18n="bug2t"></span><span data-i18n="bug2"></span></div>
+    <div class="card"><span class="tag" data-i18n="bug3t"></span><span data-i18n="bug3"></span></div>
+    <div class="card"><span class="tag" data-i18n="bug4t"></span><span data-i18n="bug4"></span></div>
+  </div>
+</section>
+</main>
+<nav class="pager" id="pager"></nav>
+<div class="sitefoot" id="sitefoot"></div>
+</div>
+<script src="../hexview.js"></script>
+<script src="i18n.js"></script>
+<script src="../assets/core.js"></script>
+<script src="page.js"></script>
+</body>
+</html>

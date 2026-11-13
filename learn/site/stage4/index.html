@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stage 4 · Jacobian & forces — HexPod Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-root="../" data-page="s4">
+<div class="bar"><div class="in gutter"></div></div>
+
+<div class="gutter">
+<div class="wrap"><nav class="strip" id="strip" aria-label="stages"></nav></div>
+<header class="hero">
+  <div>
+    <div class="eyebrow" data-i18n="eyebrow"></div>
+    <h1 data-i18n="h1"></h1>
+    <p class="sub" data-i18n="sub"></p>
+    <div class="mission"><span style="font-size:22px">🎯</span><div data-i18n="mission"></div></div>
+    <div class="meta"><span data-i18n="metaTime"></span><span data-i18n="metaPre"></span><span data-i18n="metaTools"></span></div>
+  </div>
+  <div class="stage-canvas">
+    <figure class="fig "><video class="clip" data-src="../media/ours/stand_sway.mp4" poster="../media/ours/stand_sway.jpg"></video>
+  <figcaption><span data-i18n="heroCap"></span> <span class="credit" data-i18n="credOurs"></span></figcaption></figure>
+  </div>
+</header>
+<main>
+<section>
+  <h2><span class="step" data-i18n="s1step"></span><span data-i18n="s1h"></span></h2>
+  <p data-i18n="s1p1"></p>
+  <div class="two analogy"><div class="card" data-i18n="q1Card"></div><div class="card" data-i18n="q2Card"></div></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s2step"></span><span data-i18n="s2h"></span></h2>
+  <div class="predict">
+    <p style="margin-top:0" data-i18n="predictQ"></p>
+    <button class="reveal" type="button" data-i18n="predictBtn"></button>
+    <div class="answer" hidden><p data-i18n="predictA"></p></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s3step"></span><span data-i18n="s3h"></span></h2>
+  <p data-i18n="s3p1"></p>
+</section>
+</main>
+<div class="wide card widget">
+  <canvas id="jac" width="720" height="540" data-i18n-aria="jacAria"></canvas>
+  <div class="readout">
+    <div class="hint" data-i18n="jacHint"></div>
+    <div class="seg" role="group"><button type="button" data-mode="v" aria-pressed="true" data-i18n="mV"></button><button type="button" data-mode="e" aria-pressed="false" data-i18n="mE"></button><button type="button" data-mode="t" aria-pressed="false" data-i18n="mT"></button></div>
+    <dl class="kv" id="jkv"></dl>
+    <div id="jst"></div>
+    <div class="seg"><button type="button" id="goStand" data-i18n="goStand"></button><button type="button" id="goStraight" data-i18n="goStraight"></button></div>
+  </div>
+</div>
+<main>
+<section style="padding-top:0">
+  <p data-i18n="s3p2"></p>
+  <div class="eq">J₂ = ∂(r, z)/∂θ2 = (−z, u) &nbsp;&nbsp;&nbsp; J₃ = ∂(r, z)/∂θ3 = (L3·sin(θ2−θ3), −L3·cos(θ2−θ3))</div>
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="s3w"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s4step"></span><span data-i18n="s4h"></span></h2>
+  <p data-i18n="s4p1"></p>
+  <div class="eq">δp ≈ J · δθ</div>
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="s4w"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s5step"></span><span data-i18n="s5h"></span></h2>
+  <p data-i18n="s5p1"></p>
+  <div class="eq">det J = −r · L2 · L3 · sin θ3</div>
+  <div class="trap"><span class="t" data-i18n="trapT"></span><span data-i18n="s5trap"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s6step"></span><span data-i18n="s6h"></span></h2>
+  <p data-i18n="s6p1"></p>
+  <figure class="fig">
+  <svg class="sv" viewBox="0 0 640 300" role="img" data-i18n-aria="triAria"><polygon points="374.7,55.3 210.6,150.0 374.7,244.7" class="fas sa" stroke-width="2"/><polygon points="340.7,114.2 361.3,150.0 340.7,185.8 299.3,185.8 278.7,150.0 299.3,114.2" class="fb sk" stroke-width="1.5"/><line x1="340.7" y1="114.2" x2="374.7" y2="55.3" class="sb" stroke-width="6" stroke-linecap="round" /><circle cx="374.7" cy="55.3" r="8" class="fa"/><text x="386.9" y="48.5" text-anchor="start" class="a" style="font-size:12px">R1 · mg/3</text><line x1="361.3" y1="150.0" x2="429.4" y2="150.0" class="sm" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 5"/><circle cx="429.4" cy="150.0" r="5" class="fp sm"/><text x="447.8" y="154.0" text-anchor="start" class="m" style="font-size:12px">R2</text><line x1="340.7" y1="185.8" x2="374.7" y2="244.7" class="sb" stroke-width="6" stroke-linecap="round" /><circle cx="374.7" cy="244.7" r="8" class="fa"/><text x="386.9" y="259.5" text-anchor="start" class="a" style="font-size:12px">R3 · mg/3</text><line x1="299.3" y1="114.2" x2="265.3" y2="55.3" class="sm" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 5"/><circle cx="265.3" cy="55.3" r="5" class="fp sm"/><text x="253.1" y="48.5" text-anchor="end" class="m" style="font-size:12px">L1</text><line x1="278.7" y1="150.0" x2="210.6" y2="150.0" class="sb" stroke-width="6" stroke-linecap="round" /><circle cx="210.6" cy="150.0" r="8" class="fa"/><text x="192.2" y="154.0" text-anchor="end" class="a" style="font-size:12px">L2 · mg/3</text><line x1="299.3" y1="185.8" x2="265.3" y2="244.7" class="sm" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 5"/><circle cx="265.3" cy="244.7" r="5" class="fp sm"/><text x="253.1" y="259.5" text-anchor="end" class="m" style="font-size:12px">L3</text><circle cx="320" cy="150" r="6" class="fk"/><text x="320" y="214" text-anchor="middle" style="font-size:11px" data-i18n="triCom"></text><line x1="320" y1="158" x2="320" y2="202" class="sm" stroke-width="1"/><text x="30" y="40" class="m" style="font-size:12px">↑ </text><text x="44" y="40" class="m" style="font-size:12px" data-i18n="triFront"></text></svg>
+  <figcaption data-i18n="triCap"></figcaption></figure>
+  <p data-i18n="s6p2"></p>
+  <div class="eq">τ = Jᵀ · F</div>
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="s6w"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s7step"></span><span data-i18n="s7h"></span></h2>
+  <p data-i18n="s7p1"></p>
+  <figure class="fig "><img src="../media/ours/torque_kappa.jpg" loading="lazy" data-i18n-alt="hmCap" alt="">
+  <figcaption><span data-i18n="hmCap"></span> <span class="credit" data-i18n="credOurs"></span></figcaption></figure>
+  <p data-i18n="s7p2"></p>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="prstep"></span><span data-i18n="prh"></span></h2>
+  <p data-i18n="prp1"></p>
+  <ol class="ladder">
+    <li><span class="no-">1</span><span data-i18n="cp1"></span></li>
+    <li><span class="no-">2</span><span data-i18n="cp2"></span></li>
+    <li><span class="no-">3</span><span data-i18n="cp3"></span></li>
+    <li><span class="no-">4</span><span data-i18n="cp4"></span></li>
+    <li class="reward"><span class="no-">★</span><span data-i18n="cpR1"></span></li>
+    <li class="reward"><span class="no-">🤖</span><span data-i18n="cpR2"></span></li>
+  </ol>
+  <div class="cta"><span class="btn off" data-i18n="nbSoon"></span> <a href="../stage3/index.html" data-i18n="seeS3"></a></div>
+  <p class="cap" data-i18n="nbSoonNote"></p>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="fromBuild"></span><span data-i18n="bgh"></span></h2>
+  <p data-i18n="bgp1"></p>
+  
+  <div class="log">
+    <div class="card"><span class="tag" data-i18n="bug1t"></span><span data-i18n="bug1"></span></div>
+    <div class="card"><span class="tag" data-i18n="bug2t"></span><span data-i18n="bug2"></span></div>
+    <div class="card"><span class="tag" data-i18n="bug3t"></span><span data-i18n="bug3"></span></div>
+  </div>
+</section>
+</main>
+<nav class="pager" id="pager"></nav>
+<div class="sitefoot" id="sitefoot"></div>
+</div>
+<script src="../hexview.js"></script>
+<script src="i18n.js"></script>
+<script src="../assets/core.js"></script>
+<script src="page.js"></script>
+</body>
+</html>
