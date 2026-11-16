@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stage 5 · Body kinematics — HexPod Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-root="../" data-page="s5">
+<div class="bar"><div class="in gutter"></div></div>
+
+<div class="gutter">
+<div class="wrap"><nav class="strip" id="strip" aria-label="stages"></nav></div>
+<header class="hero">
+  <div>
+    <div class="eyebrow" data-i18n="eyebrow"></div>
+    <h1 data-i18n="h1"></h1>
+    <p class="sub" data-i18n="sub"></p>
+    <div class="mission"><span style="font-size:22px">🎯</span><div data-i18n="mission"></div></div>
+    <div class="meta"><span data-i18n="metaTime"></span><span data-i18n="metaPre"></span><span data-i18n="metaTools"></span></div>
+  </div>
+  <div class="stage-canvas">
+    <figure class="fig "><video class="clip" data-src="../media/ours/body_dance.mp4" poster="../media/ours/body_dance.jpg"></video>
+  <figcaption><span data-i18n="heroCap"></span> <span class="credit" data-i18n="credOurs"></span></figcaption></figure>
+  </div>
+</header>
+<main>
+<section>
+  <h2><span class="step" data-i18n="s1step"></span><span data-i18n="s1h"></span></h2>
+  <p data-i18n="s1p1"></p>
+</section>
+</main>
+<div class="wide"><figure class="fig">
+  <svg class="sv" viewBox="0 0 900 170" role="img" data-i18n-aria="frAria">
+    <defs><marker id="f1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fa"/></marker></defs>
+    <rect x="10" y="30" width="170" height="100" rx="12" class="fp sk" stroke-width="1.5"/>
+    <text x="95" y="62" text-anchor="middle" style="font-weight:600" data-i18n="fr1"></text><text x="95" y="88" text-anchor="middle" class="m" style="font-size:12px" data-i18n="fr1b"></text><text x="95" y="110" text-anchor="middle" class="a" style="font-size:13px">f</text>
+    <line x1="182" y1="80" x2="292" y2="80" class="sa" stroke-width="2.5" marker-end="url(#f1)"/><text x="237" y="68" text-anchor="middle" class="a" style="font-size:12px">Rᵀ(f − t)</text>
+    <rect x="296" y="30" width="170" height="100" rx="12" class="fp sk" stroke-width="1.5"/>
+    <text x="381" y="62" text-anchor="middle" style="font-weight:600" data-i18n="fr2"></text><text x="381" y="88" text-anchor="middle" class="m" style="font-size:12px" data-i18n="fr2b"></text><text x="381" y="110" text-anchor="middle" class="a" style="font-size:13px">pᴮ</text>
+    <line x1="468" y1="80" x2="610" y2="80" class="sa" stroke-width="2.5" marker-end="url(#f1)"/><text x="539" y="68" text-anchor="middle" class="a" style="font-size:12px">Rz(−αᵢ)(pᴮ − mᵢ)</text>
+    <rect x="614" y="30" width="150" height="100" rx="12" class="fp sk" stroke-width="1.5"/>
+    <text x="689" y="62" text-anchor="middle" style="font-weight:600" data-i18n="fr3"></text><text x="689" y="88" text-anchor="middle" class="m" style="font-size:12px" data-i18n="fr3b"></text><text x="689" y="110" text-anchor="middle" class="a" style="font-size:13px">pᴸ</text>
+    <line x1="766" y1="80" x2="804" y2="80" class="sa" stroke-width="2.5" marker-end="url(#f1)"/>
+    <rect x="808" y="30" width="84" height="100" rx="12" class="fas sa" stroke-width="1.5"/><text x="850" y="74" text-anchor="middle" style="font-weight:600">ik()</text><text x="850" y="98" text-anchor="middle" class="m" style="font-size:11px" data-i18n="fr4"></text>
+    <text x="10" y="160" class="m" style="font-size:12px" data-i18n="frNote"></text>
+  </svg>
+  <figcaption data-i18n="frCap"></figcaption></figure></div>
+<main>
+<section style="padding-top:0">
+  <p data-i18n="s1p2"></p>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s2step"></span><span data-i18n="s2h"></span></h2>
+  <div class="predict">
+    <p style="margin-top:0" data-i18n="predictQ"></p>
+    <button class="reveal" type="button" data-i18n="predictBtn"></button>
+    <div class="answer" hidden><p data-i18n="predictA"></p></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="r1step"></span><span data-i18n="r1h"></span></h2>
+  <p data-i18n="r1p1"></p>
+  <p data-i18n="r1p2"></p>
+</section>
+</main>
+<div class="wide card widget">
+  <canvas id="twoF" width="720" height="560" data-i18n-aria="twoAria"></canvas>
+  <div class="readout">
+    <div class="hint" data-i18n="twoHint"></div>
+    <div class="ctl"><label data-i18n="twoT"></label><input type="range" id="tx" min="0" max="60" step="1" value="20"><output></output></div>
+    <div class="ctl"><label data-i18n="twoPsi"></label><input type="range" id="tpsi" min="-30" max="30" step="1" value="10"><output></output></div>
+    <dl class="kv" id="tkv"></dl>
+  </div>
+</div>
+<main>
+<section style="padding-top:0">
+  <p data-i18n="r1p3"></p>
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="r1w"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="r2step"></span><span data-i18n="r2h"></span></h2>
+  <p data-i18n="r2p1"></p>
+</section>
+</main>
+<div class="wide"><figure class="fig">
+  <svg class="sv" viewBox="0 0 820 320" role="img" data-i18n-aria="rotAria"><defs><marker id="ra" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fk"/></marker><marker id="rb" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fa"/></marker><marker id="rc" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fbl"/></marker></defs><polyline points="288.8,60.1 281.2,58.3 273.5,56.8 265.7,55.8 257.9,55.2 250.0,55.0 242.1,55.2 234.3,55.8 226.5,56.8 218.8,58.3 211.2,60.1 203.6,62.3 196.2,65.0 189.0,68.0 181.9,71.3 175.0,75.1 168.3,79.2 161.8,83.6 155.6,88.4 149.6,93.5 143.9,98.9 138.5,104.6 133.4,110.6 128.6,116.8 124.2,123.3 120.1,130.0 116.3,136.9 113.0,144.0 110.0,151.2 107.3,158.6 105.1,166.2 103.3,173.8 101.8,181.5 100.8,189.3 100.2,197.1 100.0,205.0 100.2,212.9 100.8,220.7 101.8,228.5 103.3,236.2 105.1,243.8" fill="none" class="sl" stroke-width="1.5" stroke-dasharray="4 4"/><line x1="250" y1="205" x2="250.0" y2="28.0" class="sm" stroke-width="1.5" marker-end="url(#ra)"/><text x="256.0" y="32.0" class="m" style="font-size:13px">x<tspan style="font-size:10px">W</tspan></text><line x1="250" y1="205" x2="73.0" y2="205.0" class="sm" stroke-width="1.5" marker-end="url(#ra)"/><text x="69.0" y="197.0" class="m" style="font-size:13px">y<tspan style="font-size:10px">W</tspan></text><line x1="250" y1="205" x2="175.0" y2="75.1" class="sa" stroke-width="3" marker-end="url(#rb)"/><line x1="250" y1="205" x2="120.1" y2="280.0" class="sb" stroke-width="3" marker-end="url(#rc)"/><line x1="175.0" y1="75.1" x2="250" y2="75.1" class="sa" stroke-width="1.2" stroke-dasharray="3 3"/><line x1="175.0" y1="75.1" x2="175.0" y2="205" class="sa" stroke-width="1.2" stroke-dasharray="3 3"/><text x="256" y="144.0" class="a" style="font-size:12px">cos ψ</text><text x="212.5" y="223" text-anchor="middle" class="a" style="font-size:12px">sin ψ</text><text x="167.0" y="65.1" text-anchor="middle" class="a" style="font-size:13px">x<tspan style="font-size:10px">B</tspan> = (cos ψ, sin ψ)</text><text x="116.1" y="302.0" text-anchor="middle" class="b" style="font-size:13px">y<tspan style="font-size:10px">B</tspan> = (−sin ψ, cos ψ)</text><polyline points="250.0,157.0 247.5,157.1 245.0,157.3 242.5,157.6 240.0,158.0 237.6,158.6 235.2,159.3 232.8,160.2 230.5,161.1 228.2,162.2 226.0,163.4" fill="none" class="sk" stroke-width="1.5"/><text x="235.0" y="142.0" style="font-size:13px">ψ</text><circle cx="250" cy="205" r="4" class="fk"/><text x="470" y="162" style="font-size:17px;font-weight:600">R(ψ) =</text><path d="M 552 110 h -8 v 84 h 8" fill="none" class="sk" stroke-width="2"/><path d="M 774 110 h 8 v 84 h -8" fill="none" class="sk" stroke-width="2"/><rect x="556" y="112" width="96" height="80" rx="8" class="fas"/><rect x="666" y="112" width="104" height="80" rx="8" class="fbs"/><text x="604" y="144" text-anchor="middle" style="font-size:16px">cos ψ</text><text x="718" y="144" text-anchor="middle" style="font-size:16px">−sin ψ</text><text x="604" y="176" text-anchor="middle" style="font-size:16px">sin ψ</text><text x="718" y="176" text-anchor="middle" style="font-size:16px">cos ψ</text><text x="604" y="216" text-anchor="middle" class="a" style="font-size:12px">x<tspan style="font-size:9px">B</tspan></text><text x="718" y="216" text-anchor="middle" class="b" style="font-size:12px">y<tspan style="font-size:9px">B</tspan></text><text x="470" y="260" class="m" style="font-size:12px" data-i18n="rotCol"></text><text x="470" y="282" class="m" style="font-size:12px" data-i18n="rotCol2"></text></svg>
+  <figcaption data-i18n="rotCap"></figcaption></figure></div>
+<main>
+<section style="padding-top:0">
+  <p data-i18n="r2p2"></p>
+  <div class="eq eqm"><span class="eqt">world =</span><span class="mtx" style="--c:2"><span>cos ψ</span><span>−sin ψ</span><span>sin ψ</span><span>cos ψ</span></span><span class="mtx" style="--c:1"><span>a</span><span>b</span></span><span class="eqt">= a ·</span><span class="mtx" style="--c:1"><span>cos ψ</span><span>sin ψ</span></span><span class="eqt">+ b ·</span><span class="mtx" style="--c:1"><span>−sin ψ</span><span>cos ψ</span></span></div>
+  <p data-i18n="r2p3"></p>
+  <div class="eq eqm"><span class="eqt">body = Rᵀ · world =</span><span class="mtx" style="--c:2"><span>cos ψ</span><span>sin ψ</span><span>−sin ψ</span><span>cos ψ</span></span><span class="eqt">· world</span></div>
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="r2w"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s3step"></span><span data-i18n="s3h"></span></h2>
+  <p data-i18n="s3p1"></p>
+  <div class="gallery side" style="grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr)">
+    <figure class="fig" style="margin:0">
+  <svg class="sv" viewBox="0 0 600 320" role="img" data-i18n-aria="geoAria"><circle cx="300" cy="160" r="130.2" fill="none" class="sl" stroke-width="1.5" stroke-dasharray="5 5"/><polygon points="324.6,117.4 349.2,160.0 324.6,202.6 275.4,202.6 250.8,160.0 275.4,117.4" class="fb sk" stroke-width="1.5"/><line x1="324.6" y1="117.4" x2="365.1" y2="47.2" class="sb" stroke-width="5" stroke-linecap="round"/><circle cx="324.6" cy="117.4" r="5" class="fk"/><circle cx="365.1" cy="47.2" r="6" class="fa"/><text x="374.0" y="35.8" text-anchor="start" style="font-size:12px">R1 <tspan class="a">α = -30°</tspan></text><line x1="349.2" y1="160.0" x2="430.2" y2="160.0" class="sb" stroke-width="5" stroke-linecap="round"/><circle cx="349.2" cy="160.0" r="5" class="fk"/><circle cx="430.2" cy="160.0" r="6" class="fa"/><text x="448.0" y="164.0" text-anchor="start" style="font-size:12px">R2 <tspan class="a">α = -90°</tspan></text><line x1="324.6" y1="202.6" x2="365.1" y2="272.8" class="sb" stroke-width="5" stroke-linecap="round"/><circle cx="324.6" cy="202.6" r="5" class="fk"/><circle cx="365.1" cy="272.8" r="6" class="fa"/><text x="374.0" y="292.2" text-anchor="start" style="font-size:12px">R3 <tspan class="a">α = -150°</tspan></text><line x1="275.4" y1="117.4" x2="234.9" y2="47.2" class="sb" stroke-width="5" stroke-linecap="round"/><circle cx="275.4" cy="117.4" r="5" class="fk"/><circle cx="234.9" cy="47.2" r="6" class="fa"/><text x="226.0" y="35.8" text-anchor="end" style="font-size:12px">L1 <tspan class="a">α = +30°</tspan></text><line x1="250.8" y1="160.0" x2="169.8" y2="160.0" class="sb" stroke-width="5" stroke-linecap="round"/><circle cx="250.8" cy="160.0" r="5" class="fk"/><circle cx="169.8" cy="160.0" r="6" class="fa"/><text x="152.0" y="164.0" text-anchor="end" style="font-size:12px">L2 <tspan class="a">α = +90°</tspan></text><line x1="275.4" y1="202.6" x2="234.9" y2="272.8" class="sb" stroke-width="5" stroke-linecap="round"/><circle cx="275.4" cy="202.6" r="5" class="fk"/><circle cx="234.9" cy="272.8" r="6" class="fa"/><text x="226.0" y="292.2" text-anchor="end" style="font-size:12px">L3 <tspan class="a">α = +150°</tspan></text><line x1="300" y1="160" x2="300" y2="130" class="sk" stroke-width="2"/><text x="305" y="138" style="font-size:12px">x</text><line x1="300" y1="160" x2="270" y2="160" class="sk" stroke-width="2"/><text x="272" y="154" style="font-size:12px">y</text><line x1="300" y1="160" x2="324.6" y2="117.4" class="sm" stroke-width="1" stroke-dasharray="3 3"/><text x="316.3" y="152.7" class="m" style="font-size:11px">98.4</text><text x="440" y="310" class="m" style="font-size:11px" data-i18n="geoCircle"></text></svg>
+  <figcaption data-i18n="geoCap"></figcaption></figure>
+    <figure class="fig plate"><img src="../media/rk/calibration_2.jpg" loading="lazy" data-i18n-alt="topRender" alt="">
+  <figcaption><span data-i18n="topRender"></span> <span class="credit" data-i18n="credRk"></span></figcaption></figure>
+  </div>
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="s3w"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s4step"></span><span data-i18n="s4h"></span></h2>
+  <p data-i18n="s4p1"></p>
+  <ul class="cols">
+    <li data-i18n="s4c1"></li>
+    <li data-i18n="s4c2"></li>
+    <li data-i18n="s4c3"></li>
+  </ul>
+</section>
+</main>
+<div class="wide card panel">
+  <canvas id="rpy" width="1100" height="330" data-i18n-aria="rpyAria"></canvas>
+  <p class="cap" style="padding:10px 16px 12px;margin:0" data-i18n="rpyCap"></p>
+</div>
+<main>
+<section style="padding-top:0">
+  <div class="gallery side" style="grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);align-items:center">
+    <figure class="fig plate"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Yaw_Axis_Corrected.svg/640px-Yaw_Axis_Corrected.svg.png" loading="lazy" data-ext alt="" data-i18n-alt="axesCap">
+  <figcaption><span data-i18n="axesCap"></span> <a class="credit" href="https://commons.wikimedia.org/wiki/File:Yaw_Axis_Corrected.svg" data-i18n="credWM"></a></figcaption></figure>
+    <p data-i18n="s4p2" style="margin:0"></p>
+  </div>
+  <div class="eq eqm wrap"><span class="eqg"><span class="eqt">Rz(yaw) =</span><span class="mtx" style="--c:3"><span>cos</span><span>−sin</span><span>0</span><span>sin</span><span>cos</span><span>0</span><span>0</span><span>0</span><span>1</span></span></span><span class="eqg"><span class="eqt">Ry(pitch) =</span><span class="mtx" style="--c:3"><span>cos</span><span>0</span><span>sin</span><span>0</span><span>1</span><span>0</span><span>−sin</span><span>0</span><span>cos</span></span></span><span class="eqg"><span class="eqt">Rx(roll) =</span><span class="mtx" style="--c:3"><span>1</span><span>0</span><span>0</span><span>0</span><span>cos</span><span>−sin</span><span>0</span><span>sin</span><span>cos</span></span></span></div>
+  <p data-i18n="s4p3"></p>
+  <div class="eq">R = Rz(yaw) · Ry(pitch) · Rx(roll)</div>
+  <div class="trap"><span class="t" data-i18n="trapT"></span><span data-i18n="s4trap"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s5step"></span><span data-i18n="s5h"></span></h2>
+  <p data-i18n="s5p1"></p>
+  <div class="eq">pᴸᵢ = Rz(−αᵢ) · ( Rᵀ · (fᵢ − t) − mᵢ )</div>
+  <table class="sym"><tr><td>fᵢ</td><td data-i18n="sy_f"></td></tr><tr><td>t</td><td data-i18n="sy_t"></td></tr><tr><td>R</td><td data-i18n="sy_R"></td></tr><tr><td>pᴮ</td><td data-i18n="sy_pB"></td></tr><tr><td>mᵢ, αᵢ</td><td data-i18n="sy_m"></td></tr><tr><td>pᴸᵢ</td><td data-i18n="sy_pL"></td></tr></table>
+  <p data-i18n="s5p2"></p>
+</section>
+</main>
+<div class="wide card panel">
+  <canvas id="chain" width="1100" height="540" data-i18n-aria="chAria"></canvas>
+  <div class="pctl">
+    <div class="seg"><button type="button" id="chPrev" data-i18n="chPrev"></button><button type="button" id="chNext" data-i18n="chNext"></button></div>
+    <button type="button" class="toggle" id="chPlay" aria-pressed="false" data-i18n="chPlay"></button>
+    <span id="chTxt" style="flex:1 1 320px;font-size:15px"></span>
+  </div>
+</div>
+<main>
+<section style="padding-top:0">
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="s5w"></span></div>
+  <div class="trap"><span class="t" data-i18n="trapT"></span><span data-i18n="s5trap"></span></div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s6step"></span><span data-i18n="s6h"></span></h2>
+  <p data-i18n="s6p1"></p>
+</section>
+</main>
+<div class="wide card widget">
+  <canvas id="pose" width="720" height="560" data-i18n-aria="poseAria"></canvas>
+  <div class="readout">
+    <div class="hint" data-i18n="poseHint"></div>
+    <div class="ctl"><label>x</label><input type="range" id="px" min="-50" max="50" step="0.5" value="0"><output></output></div><div class="ctl"><label>y</label><input type="range" id="py" min="-50" max="50" step="0.5" value="0"><output></output></div><div class="ctl"><label>z</label><input type="range" id="pz" min="-40" max="50" step="0.5" value="0"><output></output></div>
+    <div class="ctl"><label>roll</label><input type="range" id="pr" min="-25" max="25" step="0.5" value="0"><output></output></div><div class="ctl"><label>pitch</label><input type="range" id="pp" min="-25" max="25" step="0.5" value="0"><output></output></div><div class="ctl"><label>yaw</label><input type="range" id="pw" min="-35" max="35" step="0.5" value="0"><output></output></div>
+    <div class="seg"><button type="button" id="reset" data-i18n="bReset"></button><button type="button" class="toggle" id="wave" aria-pressed="false" data-i18n="bWave"></button></div>
+    <dl class="kv" id="pkv"></dl>
+  </div>
+</div>
+<main>
+<section style="padding-top:0">
+  <p data-i18n="s6p2"></p>
+  <div class="gallery side" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center">
+    <figure class="fig plate"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/Hexapod_general_Anim.gif" loading="lazy" data-ext alt="" data-i18n-alt="stewCap">
+  <figcaption><span data-i18n="stewCap"></span> <a class="credit" href="https://commons.wikimedia.org/wiki/File:Hexapod_general_Anim.gif" data-i18n="credWM"></a></figcaption></figure>
+    <p data-i18n="s6p3" style="margin:0"></p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s7step"></span><span data-i18n="s7h"></span></h2>
+  <p data-i18n="s7p1"></p>
+  <figure class="fig tall"><img src="../media/ours/roll_pitch.jpg" loading="lazy" data-i18n-alt="rpCap" alt="">
+  <figcaption><span data-i18n="rpCap"></span> <span class="credit" data-i18n="credOurs"></span></figcaption></figure>
+  <p data-i18n="s7p2"></p>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="s8step"></span><span data-i18n="s8h"></span></h2>
+  <p data-i18n="s8p1"></p>
+  <div class="eq">joint speed ≈ (θ(t + Δt) − θ(t)) / Δt &nbsp;&nbsp;&nbsp; Δt = 1/50 s</div>
+  <p data-i18n="s8p2"></p>
+  <div class="worked"><span class="t" data-i18n="workedT"></span><span data-i18n="s8w"></span></div>
+  <div class="gallery g2">
+    <figure class="fig "><video class="clip" data-src="../media/ours/wave_dance.mp4" poster="../media/ours/wave_dance.jpg"></video>
+  <figcaption><span data-i18n="waveCap"></span> <span class="credit" data-i18n="credOurs"></span></figcaption></figure>
+    <figure class="fig "><video class="clip" data-src="../media/ours/wave_front.mp4" poster="../media/ours/wave_front.jpg"></video>
+  <figcaption><span data-i18n="waveCap2"></span> <span class="credit" data-i18n="credOurs"></span></figcaption></figure>
+  </div>
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="prstep"></span><span data-i18n="prh"></span></h2>
+  <p data-i18n="prp1"></p>
+  <ol class="ladder">
+    <li><span class="no-">1</span><span data-i18n="cp1"></span></li>
+    <li><span class="no-">2</span><span data-i18n="cp2"></span></li>
+    <li><span class="no-">3</span><span data-i18n="cp3"></span></li>
+    <li><span class="no-">4</span><span data-i18n="cp4"></span></li>
+    <li class="reward"><span class="no-">★</span><span data-i18n="cpR1"></span></li>
+    <li class="reward"><span class="no-">🤖</span><span data-i18n="cpR2"></span></li>
+  </ol>
+  <div class="cta"><a class="btn" id="nbLink" href="notebook/index.html" data-keep-lang data-i18n="openNb"></a></div>
+  
+</section>
+
+<section>
+  <h2><span class="step" data-i18n="fromBuild"></span><span data-i18n="bgh"></span></h2>
+  <p data-i18n="bgp1"></p>
+  
+  <div class="log">
+    <div class="card"><span class="tag" data-i18n="bug1t"></span><span data-i18n="bug1"></span></div>
+    <div class="card"><span class="tag" data-i18n="bug2t"></span><span data-i18n="bug2"></span></div>
+    <div class="card"><span class="tag" data-i18n="bug3t"></span><span data-i18n="bug3"></span></div>
+  </div>
+</section>
+</main>
+<nav class="pager" id="pager"></nav>
+<div class="sitefoot" id="sitefoot"></div>
+</div>
+<script src="../hexview.js"></script>
+<script src="i18n.js"></script>
+<script src="../assets/core.js"></script>
+<script src="page.js"></script>
+</body>
+</html>
