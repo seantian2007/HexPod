@@ -16,6 +16,24 @@
 - `test/` – Mac-only tests against the Python code.
 - `../esp_teleop.py` – gamepad on the computer, sends sticks/buttons to the ESP32.
 
+## WiFi (stage 8, branch dev-code_wifi)
+
+The ESP32 is a WiFi access point. After uploading, the serial monitor (115200) prints the
+network name `hexapod-XXXX` and the password (`WIFI_PASSWORD` in hexapod.ino). Join it from
+the Mac; the robot is `192.168.4.1`, UDP port 1234. USB serial still works as before.
+
+From `code/`:
+
+```
+python3 link_test.py                       # W2: loss < 1 %, p99 round trip < 50 ms
+python3 esp_teleop.py                      # WiFi (X = start / stop recording to logs/)
+python3 esp_teleop.py --serial             # USB, as in stage 7
+python3 walk_test.py straight --record     # floor test + per-frame CSV in logs/
+```
+
+`utils/esp_link.py` hides the difference: `open_link(args)` gives a UDP or a serial link
+with the same `send()`, `event()`, `wait_for()`, `start_recording()`.
+
 Tests (from `firmware/test/`):
 
 ```

@@ -21,6 +21,11 @@ Walker::Walker(Gait gait_, double T_, float h_, double idle_time_)
     start_hold();
 }
 
+double Walker::phase() const {
+    double x = fmod(t / T, 1.0);
+    return x < 0.0 ? x + 1.0 : x;           // t can be negative after start_hold()
+}
+
 bool Walker::set_gait(Gait g, double T_) {
     if (!stopped) {
         return false;

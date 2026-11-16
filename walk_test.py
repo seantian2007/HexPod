@@ -1,26 +1,60 @@
-"""Open-loop accuracy test (stage 6 milestones 4 and 5) on the stage 7 firmware.
+"""Open-loop accuracy test (stage 6 milestones 4 and 5) on the stage 7/8 firmware.
 
 Run from code/:
-    python3 walk_test.py straight            # walk forward 300 mm
+    python3 walk_test.py straight            # walk forward 300 mm, over WiFi
     python3 walk_test.py turn                # turn left 90 deg in place
     python3 walk_test.py straight --dist 500 / turn --angle -90
     python3 walk_test.py straight --speed 0.5 --gait ripple
+    python3 walk_test.py straight --record   # also save the per-frame data (WiFi only)
+    python3 walk_test.py straight --serial   # over USB, as in stage 7
 
-The script stands the robot up, waits for you to line it up, sends a full stick for
-target / v_max seconds, waits until the walker has stopped, and prints the odometry the
-ESP32 actually commanded. Then you type in what you measured and it prints the error.
+The script stands the robot up (or unparks it), selects the gait, zeroes the odometry,
+waits for you to line it up, sends a full stick for target / v_max seconds, waits until
+the walker has stopped, and prints the odometry the ESP32 actually commanded. Then you
+type in what you measured and it prints the error.
 """
 import argparse
 import math
-import queue
 import threading
 import time
 
-import serial
+from utils.esp_link import add_link_args, open_link
 
 RATE = 20
 # v and w factors per gait (must match GAIT_CFG in command.cpp); x JOINT_SPEED_LIMIT 150
 GAITS = {'tripod': (0.38, 0.15), 'ripple': (0.16, 0.075), 'wave': (0.075, 0.035)}
+
+
+def get_status(link):
+    """Ask the robot for 'status state=.. gait=.. recording=..' and return it as a dict."""
+    for _ in range(3):                               # UDP: S could be lost, ask again
+        link.send('S')
+        try:
+            line = link.wait_for('status ', 1.0)
+        except TimeoutError:
+            continue
+        return dict(kv.split('=') for kv in line.split()[1:] if '=' in kv)
+    raise SystemExit('the robot does not answer. WiFi joined? Robot powered?')
+
+
+def get_ready(link, gait):
+    """Bring the robot to RUN, unparked, in `gait`, with the odometry at zero."""
+    st = get_status(link)
+    if st['state'] in ('RELAXED', 'HOLD'):           # stand up / home first
+        link.event('A')
+        link.wait_for('state RUN', 15)
+    elif st['state'] in ('STANDUP', 'HOMING'):       # already on its way
+        link.wait_for('state RUN', 15)
+    else:                                            # RUN: A unparks if parked, else does nothing
+        link.event('A')
+    st = get_status(link)
+    names = list(GAITS)
+    steps = (names.index(gait) - names.index(st['gait'])) % len(names)
+    for _ in range(steps):                           # E,N steps tripod -> ripple -> wave
+        link.event('N')
+        link.wait_for('gait ', 5)
+    link.event('Z')
+    link.wait_for('odo reset', 2)
 
 
 def main():
@@ -30,42 +64,13 @@ def main():
     ap.add_argument('--angle', type=float, default=90, help='deg, CCW +, turn mode')
     ap.add_argument('--speed', type=float, default=1.0, help='stick fraction 0..1')
     ap.add_argument('--gait', choices=list(GAITS), default='tripod')
-    ap.add_argument('--port', default='/dev/cu.usbserial-0001')
+    ap.add_argument('--record', action='store_true', help='save per-frame data to logs/')
+    add_link_args(ap)
     args = ap.parse_args()
     fv, fw = GAITS[args.gait]
     v_max, w_max = fv * 150, min(fw * 150, 21)
 
-    ser = serial.Serial()
-    ser.port, ser.baudrate, ser.timeout = args.port, 115200, 0.2
-    ser.dtr = ser.rts = False
-    ser.open()
-    lines = queue.Queue()
-
-    def reader():
-        while True:
-            try:
-                line = ser.readline().decode(errors='replace').strip()
-            except serial.SerialException:
-                return
-            if line:
-                print(f'[esp32] {line}')
-                lines.put(line)
-    threading.Thread(target=reader, daemon=True).start()
-
-    def send(line):
-        ser.write((line + '\n').encode())
-
-    def wait_for(prefix, timeout):
-        end = time.time() + timeout
-        while time.time() < end:
-            try:
-                line = lines.get(timeout=0.1)
-            except queue.Empty:
-                continue
-            if line.startswith(prefix):
-                return line
-        raise SystemExit(f'gave up waiting for "{prefix}"')
-
+    link = open_link(args)
     done = threading.Event()
 
     def drive(lx, ly, rx, seconds):
@@ -78,17 +83,18 @@ def main():
             while time.perf_counter() < t0 + i / RATE:
                 time.sleep(0.002)
             drive.seq += 1
-            send(f'C,{drive.seq},{lx:.3f},{ly:.3f},{rx:.3f}')
+            link.send(f'C,{drive.seq},{lx:.3f},{ly:.3f},{rx:.3f}')
     drive.seq = 0
 
     try:
-        wait_for('READY', 5)                         # opening the port resets the ESP32
-        send('E,A')
-        wait_for('state RUN', 5)
-        for _ in range(list(GAITS).index(args.gait)):     # E,N steps tripod -> ripple -> wave
-            send('E,N')
-            wait_for('gait ', 5)
+        if args.serial:
+            link.wait_for('READY', 5)                # over USB, opening the port resets the ESP32
+        get_ready(link, args.gait)
         input('\nPut the robot on the floor, line the plumb line up with the start mark, then press Enter ')
+        if args.record:
+            path = link.start_recording()
+            if path:
+                print(f'recording -> {path}')
 
         k = args.speed
         if args.mode == 'straight':
@@ -100,7 +106,9 @@ def main():
         print(f'{args.gait}, stick {k:.2f} held for {seconds:.2f} s, waiting for the walker to stop...')
         # keep sending zeros until we quit, so the ESP32 does not time out
         threading.Thread(target=drive, args=(0, 0, 0, 3600), daemon=True).start()
-        line = wait_for('stopped: odo', 10)
+        line = link.wait_for('stopped: odo', 10)
+        if link.recording:
+            link.stop_recording()
         odo = dict(kv.split('=') for kv in line.split()[2:] if '=' in kv)
         x, y, yaw = float(odo['x']), float(odo['y']), float(odo['yaw'])
         print(f'\ncommanded: x {x:.1f} mm, y {y:.1f} mm, yaw {yaw:.1f} deg')
@@ -113,16 +121,18 @@ def main():
         else:
             a = float(input('measured turn (deg, left +): '))
             print(f'turn error {a - yaw:+.1f} deg  (goal |err| <= 10)')
+    except TimeoutError as e:
+        print(f'\n{e}')
     except KeyboardInterrupt:
         print()
     finally:
         done.set()
         try:
-            send('E,B')
+            link.event('B')
             time.sleep(0.5)
-        except serial.SerialException:
+            link.close()
+        except SystemExit:
             pass
-        ser.close()
 
 
 if __name__ == '__main__':

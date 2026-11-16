@@ -22,6 +22,9 @@ public:
     // Writes the new feet positions into feet.
     void step(float vx, float vy, float w, double dt, float feet[NUM_LEGS][3]);
 
+    // Gait cycle progress 0..1 (read-only, for the data log). Does not change the walk.
+    double phase() const;
+
     bool stopped;                   // all feet down at p0, phase frozen
     bool was_stance[NUM_LEGS];      // stance flag of the last step
     Gait gait;
